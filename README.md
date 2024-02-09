@@ -5,7 +5,7 @@
 ```sh
 docker compose \
 	-f docker-compose.persistent-data-services.yml \
-	-f docker-compose.stateless-services.yml up \
-	-f docker-compose.free.yml up \
-	-d
+	-f docker-compose.stateless-services.yml \
+	-f docker-compose.free.yml \
+	up -d
 ```
