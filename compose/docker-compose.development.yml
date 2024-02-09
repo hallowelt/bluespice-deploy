@@ -1,0 +1,17 @@
+version: "3.3"
+
+name: bs-dev
+
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8025:8025"
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2
+    ports:
+      - 5601:5601
+    expose:
+      - "5601"
+    environment:
+      OPENSEARCH_HOSTS: '["http://search:9200"]'

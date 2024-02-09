@@ -1,0 +1,23 @@
+version: "3.3"
+
+name: bs-data
+
+services:
+  web:
+    image: bluespice/web-free:${VERSION}
+    volumes:
+      - ${DATADIR}/bluespice:/data
+  task:
+    image: bluespice/task-free:${VERSION}
+    volumes:
+      - ${DATADIR}/bluespice:/data
+  proxy:
+    image: nginxproxy/nginx-proxy:alpine
+    ports:
+      - "443:443"
+    volumes:
+      - ${DATADIR}/nginx/conf.d:/etc/nginx/conf.d
+      - ${DATADIR}/nginx/vhost.d:/etc/nginx/vhost.d
+      - ${DATADIR}/nginx/html:/usr/share/nginx/html
+      - ${DATADIR}/nginx/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro

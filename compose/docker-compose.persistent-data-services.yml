@@ -1,0 +1,17 @@
+version: "3.3"
+
+name: bs-data
+
+services:
+  search:
+    image: bluespice/search:${VERSION}
+    volumes:
+      - ${DATADIR}/search:/usr/share/opensearch/data
+
+  database:
+    image: mariadb:10.5
+    volumes:
+      - ${DATADIR}/mariadb/data:/var/lib/mysql
+      - ${DATADIR}/mariadb/logs:/var/log/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
