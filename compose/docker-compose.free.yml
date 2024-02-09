@@ -2,13 +2,54 @@ version: "3.3"
 
 name: bs-data
 
+x-common-environment: &common-environment
+  APP_NAME: ${APP_NAME}
+  APP_HOST: ${APP_HOST}
+  APP_PORT: ${APP_PORT}
+  APP_PROTOCOL: ${APP_PROTOCOL}
+
+  CACHE_HOST: ${CACHE_HOST}
+  CACHE_PORT: ${CACHE_PORT}
+
+  DB_ROOT_PASS: ${DB_ROOT_PASS}
+  DB_USER: ${DB_USER}
+  DB_PASS: ${DB_PASS}
+  DB_HOST: ${DB_HOST}
+
+  FORMULA_HOST: ${FORMULA_HOST}
+  FORMULA_PORT: ${FORMULA_PORT}
+  FORMULA_PROTOCOL: ${FORMULA_PROTOCOL}
+
+  PAGEPREVIEW_HOST: ${PAGEPREVIEW_HOST}
+  PAGEPREVIEW_PORT: ${PAGEPREVIEW_PORT}
+  PAGEPREVIEW_PROTOCOL: ${PAGEPREVIEW_PROTOCOL}
+
+  PDF_HOST: ${PDF_HOST}
+  PDF_PORT: ${PDF_PORT}
+  PDF_PROTOCOL: ${PDF_PROTOCOL}
+
+  SEARCH_HOST: ${SEARCH_HOST}
+  SEARCH_PORT: ${SEARCH_PORT}
+  SEARCH_PROTOCOL: ${SEARCH_PROTOCOL}
+
+  SMTP_HOST: ${SMTP_HOST}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USER: ${SMTP_USER}
+  SMTP_PASS: ${SMTP_PASS}
+  SMTP_ID_HOST: ${SMTP_ID_HOST}
+
 services:
   web:
     image: bluespice/web-free:${VERSION}
+
+    environment:
+      <<: *common-environment
     volumes:
       - ${DATADIR}/bluespice:/data
   task:
     image: bluespice/task-free:${VERSION}
+    environment:
+      <<: *common-environment
     volumes:
       - ${DATADIR}/bluespice:/data
   proxy:
