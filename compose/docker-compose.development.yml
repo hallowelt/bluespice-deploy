@@ -3,6 +3,10 @@ version: "3.3"
 name: bs-dev
 
 services:
+  web:
+    image: bluespice/dev-web-free:${VERSION}
+  task:
+    image: bluespice/dev-task-free:${VERSION}
   mailhog:
     image: mailhog/mailhog:latest
     ports:
@@ -15,3 +19,5 @@ services:
       - "5601"
     environment:
       OPENSEARCH_HOSTS: '["http://search:9200"]'
+      
+# TODO: Add Test SAML-IdP and Test-OpenIDConnect-provider

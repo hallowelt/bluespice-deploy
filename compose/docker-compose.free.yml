@@ -1,6 +1,6 @@
 version: "3.3"
 
-name: bs-data
+name: bs-free
 
 x-common-environment: &common-environment
   APP_NAME: ${APP_NAME}
