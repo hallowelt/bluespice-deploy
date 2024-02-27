@@ -5,8 +5,12 @@ name: bs-dev
 services:
   web:
     image: bluespice/dev-web-free:${VERSION}
+    volumes:
+      - ${DEV_APP_CODEBASE_DIR}:/opt/bluespice/w
   task:
     image: bluespice/dev-task-free:${VERSION}
+    volumes:
+      - ${DEV_APP_CODEBASE_DIR}:/opt/bluespice/w
   mailhog:
     image: mailhog/mailhog:latest
     ports:
