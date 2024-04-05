@@ -3,10 +3,13 @@ version: "3.3"
 name: bs-free
 
 x-common-environment: &common-environment
-  APP_NAME: ${APP_NAME}
-  APP_HOST: ${APP_HOST}
-  APP_PORT: ${APP_PORT}
-  APP_PROTOCOL: ${APP_PROTOCOL}
+  WIKI_NAME: ${WIKI_NAME}
+  WIKI_LANG: ${WIKI_LANG}
+  WIKI_PASSWORDSENDER: ${WIKI_PASSWORDSENDER}
+  WIKI_EMERGENCYCONTACT: ${WIKI_EMERGENCYCONTACT}
+  WIKI_HOST: ${WIKI_HOST}
+  WIKI_PORT: ${WIKI_PORT}
+  WIKI_PROTOCOL: ${WIKI_PROTOCOL}
 
   CACHE_HOST: ${CACHE_HOST}
   CACHE_PORT: ${CACHE_PORT}
@@ -15,6 +18,8 @@ x-common-environment: &common-environment
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_HOST: ${DB_HOST}
+  DB_NAME: ${DB_NAME}
+  DB_PREFIX: ${DB_PREFIX}
 
   FORMULA_HOST: ${FORMULA_HOST}
   FORMULA_PORT: ${FORMULA_PORT}
@@ -38,20 +43,31 @@ x-common-environment: &common-environment
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
-services:
-  web:
-    image: bluespice/web-free:${VERSION}
 
+services:
+
+  web:
+    image: bluespice/wiki-free:${VERSION}
+    command: start-web
+    depends_on:
+        database:
+            condition: service_healthy
     environment:
       <<: *common-environment
     volumes:
       - ${DATADIR}/bluespice:/data
+
   task:
-    image: bluespice/task-free:${VERSION}
+    image: bluespice/wiki-free:${VERSION}
+    command: start-task
+    depends_on:
+        database:
+            condition: service_healthy
     environment:
       <<: *common-environment
     volumes:
       - ${DATADIR}/bluespice:/data
+
   proxy:
     image: nginxproxy/nginx-proxy:alpine
     ports:

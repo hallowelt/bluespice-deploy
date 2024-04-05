@@ -4,17 +4,25 @@ name: bs-dev
 
 services:
   web:
-    image: bluespice/dev-web-free:${VERSION}
+    command:
+      - setup-dev
+      - start-web
     volumes:
-      - ${DEV_APP_CODEBASE_DIR}:/opt/bluespice/w
+      - ${DEV_WIKI_CODEBASE_DIR}:/opt/bluespice/w
   task:
-    image: bluespice/dev-task-free:${VERSION}
+    command:
+      - setup-dev
+      - start-web
     volumes:
-      - ${DEV_APP_CODEBASE_DIR}:/opt/bluespice/w
+      - ${DEV_WIKI_CODEBASE_DIR}:/opt/bluespice/w
   mailhog:
     image: mailhog/mailhog:latest
     ports:
       - "8025:8025"
+  dbadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:8080"
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2
     ports:
@@ -23,5 +31,6 @@ services:
       - "5601"
     environment:
       OPENSEARCH_HOSTS: '["http://search:9200"]'
-      
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
+
 # TODO: Add Test SAML-IdP and Test-OpenIDConnect-provider

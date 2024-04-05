@@ -3,11 +3,21 @@ version: "3.3"
 name: bs-stateless
 
 services:
+
   cache:
     image: bluespice/cache:${VERSION}
+
   formula:
     image: bluespice/formula:${VERSION}
+
   pagepreview:
     image: bluespice/pagepreview:${VERSION}
+
   pdf:
     image: bluespice/pdf:${VERSION}
+
+  shellbox-media:
+    image: docker-registry.wikimedia.org/wikimedia/mediawiki-libs-shellbox:media
+
+  shellbox-syntaxhighlight:
+    image: docker-registry.wikimedia.org/wikimedia/mediawiki-libs-shellbox:syntaxhighlight

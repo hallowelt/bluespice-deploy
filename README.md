@@ -11,3 +11,7 @@ docker compose \
 	-f docker-compose.free.yml \
 	up -d
 ```
+
+## Development
+
+If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entrypoint` GPC (=`$_REQUEST`) to a value matching the `MW_ENTRY_POINT` constant in context of the application to enable full debug log to `stdout` for any call to the specified entry point.
