@@ -29,6 +29,13 @@ services:
       timeout: 5s
       retries: 10
 
+  collabdb:
+    # Add mongodb
+
+  collabbackend:
+    # Add collabbackend
+
+
   wiki-web:
     depends_on:
         database:
