@@ -1,6 +1,6 @@
 version: "3.7"
 
-name: bs-free
+name: bluespice
 
 x-common-environment: &common-environment
   WIKI_NAME: ${WIKI_NAME}
@@ -43,7 +43,6 @@ x-common-environment: &common-environment
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
-
 services:
 
   wiki-web:
@@ -65,14 +64,3 @@ services:
       <<: *common-environment
     volumes:
       - ${DATADIR}/bluespice:/data
-
-  proxy:
-    image: nginxproxy/nginx-proxy:alpine
-    ports:
-      - "443:443"
-    volumes:
-      - ${DATADIR}/nginx/conf.d:/etc/nginx/conf.d
-      - ${DATADIR}/nginx/vhost.d:/etc/nginx/vhost.d
-      - ${DATADIR}/nginx/html:/usr/share/nginx/html
-      - ${DATADIR}/nginx/certs:/etc/nginx/certs:rw
-      - /var/run/docker.sock:/tmp/docker.sock:ro
