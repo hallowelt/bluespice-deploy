@@ -5,11 +5,11 @@ See ["Multi-container Applications docker-compose, Targeting multiple environmen
 ## Example
 
 ```sh
-docker compose \
-	-f docker-compose.persistent-data-services.yml \
-	-f docker-compose.stateless-services.yml \
-	-f docker-compose.free.yml \
-	up -d
+./start-prod-all
+```
+
+```sh
+./start-dev-all
 ```
 
 ## Development
