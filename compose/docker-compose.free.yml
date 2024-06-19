@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 name: bs-free
 
@@ -46,18 +46,16 @@ x-common-environment: &common-environment
 
 services:
 
-  web:
+  wiki-web:
     image: bluespice/wiki-free:${VERSION}
     command: start-web
-    depends_on:
-        database:
-            condition: service_healthy
     environment:
       <<: *common-environment
+      VIRTUAL_HOST: ${WIKI_HOST}
     volumes:
       - ${DATADIR}/bluespice:/data
 
-  task:
+  wiki-task:
     image: bluespice/wiki-free:${VERSION}
     command: start-task
     depends_on:

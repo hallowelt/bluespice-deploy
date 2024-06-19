@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 name: bs-stateless
 
@@ -15,9 +15,3 @@ services:
 
   pdf:
     image: bluespice/pdf:${VERSION}
-
-  shellbox-media:
-    image: docker-registry.wikimedia.org/wikimedia/mediawiki-libs-shellbox:media
-
-  shellbox-syntaxhighlight:
-    image: docker-registry.wikimedia.org/wikimedia/mediawiki-libs-shellbox:syntaxhighlight

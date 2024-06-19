@@ -1,18 +1,18 @@
-version: "3.3"
+version: "3.7"
 
 name: bs-dev
 
 services:
-  web:
+  wiki-web:
     command:
       - setup-dev
       - start-web
     volumes:
       - ${DEV_WIKI_CODEBASE_DIR}:/opt/bluespice/w
-  task:
+  wiki-task:
     command:
       - setup-dev
-      - start-web
+      - start-task
     volumes:
       - ${DEV_WIKI_CODEBASE_DIR}:/opt/bluespice/w
   mailhog:

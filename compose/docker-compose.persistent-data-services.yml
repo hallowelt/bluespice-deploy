@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 name: bs-data
 
@@ -28,3 +28,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  wiki-web:
+    depends_on:
+        database:
+            condition: service_healthy
+        search:
+            condition: service_healthy
+  wiki-task:
+    depends_on:
+        database:
+            condition: service_healthy
+        search:
+            condition: service_healthy
