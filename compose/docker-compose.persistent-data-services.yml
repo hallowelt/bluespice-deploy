@@ -29,12 +29,23 @@ services:
       timeout: 5s
       retries: 10
 
-  collabdb:
-    # Add mongodb
+  collabpadsbackend-database:
+    image: mongo:4.4-focal
+    volumes:
+      - ${DATADIR}/mongo:/data/db
 
-  collabbackend:
-    # Add collabbackend
-
+  collabpadsbackend:
+    image: bluespice/collabpadsbackend:$TAG
+    depends_on:
+      - collabpadsbackend-database
+    links:
+      - collabpadsbackend-database
+    environment:
+      COLLABPADS_BACKEND_WIKI_BASEURL: http://wiki-web/
+      COLLABPADS_BACKEND_MONGO_DB_HOST: ${MONGO_DB_HOST}
+      COLLABPADS_BACKEND_MONGO_DB_PORT: ${MONGO_DB_PORT}
+      COLLABPADS_BACKEND_LOG_LEVEL: info
+      COLLABPADS_BACKEND_PORT: 80
 
   wiki-web:
     depends_on:

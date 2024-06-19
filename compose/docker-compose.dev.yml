@@ -29,4 +29,8 @@ services:
       OPENSEARCH_HOSTS: '["http://search:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
 
+  collabpadsbackend:
+    environment:
+      COLLABPADS_BACKEND_LOG_LEVEL: debug
+
 # TODO: Add Test SAML-IdP and Test-OpenIDConnect-provider

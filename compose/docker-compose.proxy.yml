@@ -18,3 +18,10 @@ services:
   wiki-web:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /
+
+  collabpadsbackend:
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_collabpads/
+
