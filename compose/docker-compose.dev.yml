@@ -1,24 +1,29 @@
 version: "3.7"
 
 services:
+
   wiki-web:
     command:
       - /app/bin/setup-dev && /app/bin/start-web
     volumes:
       - ${DEV_WIKI_CODEBASE_DIR}:/opt/bluespice/w
+
   wiki-task:
     command:
       - /app/bin/setup-dev && /app/bin/start-task
     volumes:
       - ${DEV_WIKI_CODEBASE_DIR}:/opt/bluespice/w
+
   mailhog:
     image: mailhog/mailhog:latest
     ports:
       - "8025:8025"
+
   dbadmin:
     image: phpmyadmin/phpmyadmin:latest
     ports:
       - "8080:8080"
+
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2
     ports:
