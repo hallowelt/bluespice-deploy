@@ -7,3 +7,9 @@ services:
 
   pdf:
     image: bluespice/pdf:${VERSION}
+
+  formula:
+    image: bluespice/formula:${VERSION}
+
+  pagepreview:
+    image: bluespice/pagepreview:${VERSION}
