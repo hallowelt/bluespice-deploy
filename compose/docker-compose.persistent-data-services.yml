@@ -1,7 +1,5 @@
 version: "3.7"
 
-name: bs-data
-
 services:
 
   search:

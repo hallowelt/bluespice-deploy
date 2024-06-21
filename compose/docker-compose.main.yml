@@ -50,7 +50,6 @@ services:
     command: start-web
     environment:
       <<: *common-environment
-      VIRTUAL_HOST: ${WIKI_HOST}
     volumes:
       - ${DATADIR}/bluespice:/data
 
