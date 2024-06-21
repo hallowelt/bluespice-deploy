@@ -5,11 +5,5 @@ services:
   cache:
     image: bluespice/cache:${VERSION}
 
-  formula:
-    image: bluespice/formula:${VERSION}
-
-  pagepreview:
-    image: bluespice/pagepreview:${VERSION}
-
   pdf:
     image: bluespice/pdf:${VERSION}
