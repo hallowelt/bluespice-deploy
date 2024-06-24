@@ -9,7 +9,7 @@ services:
       - NGINX_PROXY_CONTAINER=proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${DATADIR}/acme:/etc/acme.sh
+      - ${DATADIR}/letsencrypt:/etc/acme.sh
     volumes_from:
       - proxy
     depends_on:

@@ -51,15 +51,12 @@ services:
     environment:
       <<: *common-environment
     volumes:
-      - ${DATADIR}/bluespice:/data
+      - ${DATADIR}/wiki:/data
 
   wiki-task:
     image: bluespice/wiki-free:${VERSION}
     command: start-task
-    depends_on:
-        database:
-            condition: service_healthy
     environment:
       <<: *common-environment
     volumes:
-      - ${DATADIR}/bluespice:/data
+      - ${DATADIR}/wiki:/data
