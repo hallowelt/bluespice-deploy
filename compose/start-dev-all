@@ -1,9 +1,0 @@
-#!/bin/bash
-
-docker compose \
-	-f docker-compose.persistent-data-services.yml \
-	-f docker-compose.stateless-services.yml \
-	-f docker-compose.main.yml \
-	-f docker-compose.proxy.yml \
-	-f docker-compose.dev.yml \
-	up -d

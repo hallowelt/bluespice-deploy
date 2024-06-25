@@ -5,7 +5,7 @@ See ["Multi-container Applications docker-compose, Targeting multiple environmen
 ## Example
 
 ```sh
-./prod-all up -d
+./bluespice-deploy up -d
 ```
 
 # Data volumes
