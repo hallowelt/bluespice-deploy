@@ -24,11 +24,12 @@ services:
       - MARIADB_USER=${DB_USER}
       - MARIADB_PASSWORD=${DB_PASS}
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MARIADB_ROOT_PASSWORD
-      start_period: 5s
-      interval: 5s
+      #See https://mariadb.com/kb/en/using-healthcheck-sh/
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 3
 
   collabpadsbackend-database:
     image: mongo:4.4-focal
