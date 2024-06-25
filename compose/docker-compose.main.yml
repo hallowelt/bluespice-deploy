@@ -14,7 +14,6 @@ x-common-environment: &common-environment
   CACHE_HOST: ${CACHE_HOST}
   CACHE_PORT: ${CACHE_PORT}
 
-  DB_ROOT_PASS: ${DB_ROOT_PASS}
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_HOST: ${DB_HOST}
@@ -51,15 +50,12 @@ services:
     environment:
       <<: *common-environment
     volumes:
-      - ${DATADIR}/bluespice:/data
+      - ${DATADIR}/wiki:/data
 
   wiki-task:
     image: bluespice/wiki-free:${VERSION}
     command: start-task
-    depends_on:
-        database:
-            condition: service_healthy
     environment:
       <<: *common-environment
     volumes:
-      - ${DATADIR}/bluespice:/data
+      - ${DATADIR}/wiki:/data

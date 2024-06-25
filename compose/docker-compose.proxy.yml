@@ -7,10 +7,10 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ${DATADIR}/nginx/conf.d:/etc/nginx/conf.d
-      - ${DATADIR}/nginx/vhost.d:/etc/nginx/vhost.d
-      - ${DATADIR}/nginx/html:/usr/share/nginx/html
-      - ${DATADIR}/nginx/certs:/etc/nginx/certs:rw
+      - ${DATADIR}/proxy/conf.d:/etc/nginx/conf.d
+      - ${DATADIR}/proxy/vhost.d:/etc/nginx/vhost.d
+      - ${DATADIR}/proxy/html:/usr/share/nginx/html
+      - ${DATADIR}/proxy/certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/tmp/docker.sock:ro
     labels:
       - com.github.nginx-proxy.nginx=true

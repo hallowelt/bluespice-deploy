@@ -5,4 +5,4 @@ docker compose \
 	-f docker-compose.stateless-services.yml \
 	-f docker-compose.main.yml \
 	-f docker-compose.proxy.yml \
-	up -d
+	$@

@@ -16,10 +16,13 @@ services:
   database:
     image: mariadb:10.5
     volumes:
-      - ${DATADIR}/mariadb/data:/var/lib/mysql
-      - ${DATADIR}/mariadb/logs:/var/log/mysql
+      - ${DATADIR}/database/data:/var/lib/mysql
+      - ${DATADIR}/database/logs:/var/log/mysql
     environment:
-      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MARIADB_ROOT_PASSWORD=${DB_PASS}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASS}
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MARIADB_ROOT_PASSWORD
       start_period: 5s
