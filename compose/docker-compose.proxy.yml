@@ -15,6 +15,21 @@ services:
     labels:
       - com.github.nginx-proxy.nginx=true
 
+  letsencrypt:
+    image: nginxproxy/acme-companion
+    environment:
+      - DEFAULT_EMAIL=${ADMIN_MAIL}
+      - NGINX_PROXY_CONTAINER=proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${DATADIR}/letsencrypt:/etc/acme.sh
+    volumes_from:
+      - proxy
+    depends_on:
+      - proxy
+    profiles:
+      - letsencrypt
+
   wiki-web:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
