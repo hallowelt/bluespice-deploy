@@ -25,26 +25,31 @@ services:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PORT: 8025
-      VIRTUAL_PATH: /_mailhog
+      VIRTUAL_PATH: /_mailhog/
+      VIRTUAL_DEST: /
 
   dev-dbadmin:
     image: phpmyadmin/phpmyadmin:latest
     environment:
-      PMA_HOST: database
+      PMA_HOST: ${DB_HOST}
       PMA_USER: ${DB_USER}
       PMA_PASSWORD: ${DB_PASS}
-      PMA_ABSOLUTE_URI: ${WIKI_PROTOCOL}://${WIKI_HOST}/_dbadmin
+      PMA_ABSOLUTE_URI: http://dev-dbadmin/_dbadmin
       VIRTUAL_HOST: ${WIKI_HOST}
-      VIRTUAL_PATH: /_dbadmin
+      VIRTUAL_PATH: /_dbadmin/
+      VIRTUAL_DEST: /
 
   dev-searchdashboards:
-    image: opensearchproject/opensearch-dashboards:2
+    image: opensearchproject/opensearch-dashboards:2.11.1
     environment:
+      # https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/config/opensearch_dashboards.yml
+      SERVER_BASEPATH: /_searchdashboards
+      SERVER_REWRITEBASEPATH: true
       OPENSEARCH_HOSTS: '["http://search:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PORT: 5601
-      VIRTUAL_PATH: /_searchdashboards
+      VIRTUAL_PATH: /_searchdashboards/
 
   dev-mongodbadmin:
     image: mongo-express
@@ -55,7 +60,7 @@ services:
       ME_CONFIG_SITE_BASEURL: /_mongodbadmin
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PORT: 8081
-      VIRTUAL_PATH: /_mongodbadmin
+      VIRTUAL_PATH: /_mongodbadmin/
 
   dev-ldapserver:
     # See https://github.com/rroemhild/docker-test-openldap
