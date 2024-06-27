@@ -13,3 +13,6 @@ services:
 
   pagepreview:
     image: bluespice/pagepreview:${VERSION}
+
+  diagram:
+    image: bluespice/diagram:${VERSION}

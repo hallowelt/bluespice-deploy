@@ -122,4 +122,5 @@ services:
     profiles:
       - saml
 
-
+  #dev-terminal:
+  #  image: genshen/ssh-web-console:latest
