@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+
+  jobqueuedb:
+    image: redis:6.2
+    volumes:
+      - ${DATADIR}/jobqueuedb:/data
+    healthcheck:
+      test: redis-cli ping
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  wiki-task:
+    depends_on:
+        jobqueuedb:
+            condition: service_healthy
+
+  messagebroker:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MESSAGEBROKER_USER}
+      RABBITMQ_DEFAULT_PASS: ${MESSAGEBROKER_PASS}
