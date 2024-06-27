@@ -10,17 +10,25 @@ See ["Multi-container Applications docker-compose, Targeting multiple environmen
 
 # Data volumes
 
+Persistent data will be stored in the `${DATADIR}` directory.
 
-## Development
+# Known issues
+On the first start, the `bluespice/search` container (OpenSearch) will fail, due to file system permissions. This can be fixed by running the following command:
 
-### Hostname
+```sh
+sudo chown -R 1000:1000 ${DATADIR}/search
+```
+
+# Development
+
+## Hostname
 Add the following line to `/etc/hosts`:
 
 ```sh
 127.0.0.1 mydev.localhost
 ```
 
-### SSL Certificates
+## SSL Certificates
 Inside the `${DATADIR}/proxy/certs` directory, run the following command to generate a self-signed certificate for `mydev.localhost`:
 
 ```sh
@@ -31,5 +39,5 @@ sudo chown 1000:1000 mydev.localhost.*
 
 You can now access the application via `https://mydev.localhost`.
 
-### Debugging
+## Debugging
 If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entrypoint` GPC (=`$_REQUEST`) to a value matching the `MW_ENTRY_POINT` constant in context of the application to enable full debug log to `stdout` for any call to the specified entry point.
