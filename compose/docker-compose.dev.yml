@@ -122,5 +122,13 @@ services:
     profiles:
       - saml
 
-  #dev-terminal:
-  #  image: genshen/ssh-web-console:latest
+  dev-terminal:
+    image: tsl0922/ttyd
+    environment:
+      HOME: /root
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 7681
+      VIRTUAL_PATH: /_terminal/
+      VIRTUAL_DEST: /
+    volumes:
+      - ${DEV_WIKI_CODEBASE_DIR}:/root
