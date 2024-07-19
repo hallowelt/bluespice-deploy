@@ -1,8 +1,15 @@
 #!/bin/bash
+source .env
+echo "Creating Persistent-Data-Directories"
+mkdir -p ${DATADIR}/search/data/nodes/0
+mkdir -p ${DATADIR}/wiki
+sudo chown -R 1000:1000 ${DATADIR}/search
+sudo chown -R 1002:1002 ${DATADIR}/wiki
 
 docker compose \
+	-f docker-compose.main.yml \
 	-f docker-compose.persistent-data-services.yml \
 	-f docker-compose.stateless-services.yml \
-	-f docker-compose.main.yml \
 	-f docker-compose.proxy.yml \
 	$@
+
