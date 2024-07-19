@@ -1,9 +1,13 @@
-version: "3.7"
-
 services:
 
   cache:
-    image: bluespice/cache:${VERSION}
+    image: docker.bluespice.com/bluespice/cache:${VERSION}
 
   pdf:
-    image: bluespice/pdf:${VERSION}
+    image: docker.bluespice.com/bluespice/pdf:${VERSION}
+  
+  formula:
+    image: docker.bluespice.com/bluespice/formula:${VERSION}
+  
+  diagram:
+    image: docker.bluespice.com/bluespice/diagram:${VERSION}

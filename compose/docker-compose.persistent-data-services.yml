@@ -1,9 +1,7 @@
-version: "3.7"
-
 services:
 
   search:
-    image: bluespice/search:${VERSION}
+    image: docker.bluespice.com/bluespice/search:${VERSION}
     volumes:
       - ${DATADIR}/search:/usr/share/opensearch/data
     healthcheck:
@@ -12,7 +10,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
   database:
     image: mariadb:10.5
     volumes:
@@ -29,6 +26,24 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+  collabpads-websocket:
+    image: docker.bluespice.com/bluespice/collabpads:${VERSION}
+    ports:
+      - "${COLLABPADS_BACKEND_PORT}:${COLLABPADS_BACKEND_PORT}"
+    environment:
+      COLLABPADS_BACKEND_PORT: ${COLLABPADS_BACKEND_PORT}
+      COLLABPADS_BACKEND_WIKI_BASEURL: ${COLLABPADS_BACKEND_WIKI_BASEURL}
+      COLLABPADS_BACKEND_MONGO_DB_HOST: ${COLLABPADS_BACKEND_MONGO_DB_HOST}
+      COLLABPADS_BACKEND_MONGO_DB_PORT: ${COLLABPADS_BACKEND_MONGO_DB_PORT}
+      COLLABPADS_BACKEND_MONGO_DB_NAME: ${COLLABPADS_BACKEND_MONGO_DB_NAME}
+      COLLABPADS_BACKEND_MONGO_DB_USER: ${COLLABPADS_BACKEND_MONGO_DB_USER}
+      COLLABPADS_BACKEND_MONGO_DB_PASSWORD: ${COLLABPADS_BACKEND_MONGO_DB_PASSWORD}
+      COLLABPADS_BACKEND_LOG_LEVEL: ${COLLABPADS_BACKEND_LOG_LEVEL}
+      COLLABPADS_BACKEND_HTTP_CLIENT_OPTIONS: ${COLLABPADS_BACKEND_HTTP_CLIENT_OPTIONS}
+  collabpads-database:
+    image: mongo:4.4-focal
+    volumes:
+      - ${DATADIR}/mongo:/data/db
 
   wiki-web:
     depends_on:

@@ -1,5 +1,3 @@
-version: "3.7"
-
 name: bluespice
 
 x-common-environment: &common-environment
@@ -41,20 +39,34 @@ x-common-environment: &common-environment
   SMTP_USER: ${SMTP_USER}
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
+  VERSION: ${VERSION}
+  EDITION: ${EDITION}
+  BACKUP_HOUR: ${BACKUP_HOUR}
+  DEV_WIKI_DEBUG: ${DEV_WIKI_DEBUG}
+  COLLABPADSBACKEND_PATH: ${COLLABPADSBACKEND_PATH}
+  COLLABPADS_BACKEND_PORT: ${COLLABPADS_BACKEND_PORT}
+  COLLABPADS_BACKEND_WIKI_BASEURL: ${COLLABPADS_BACKEND_WIKI_BASEURL}
+  COLLABPADS_BACKEND_MONGO_DB_HOST: ${COLLABPADS_BACKEND_MONGO_DB_HOST}
+  COLLABPADS_BACKEND_MONGO_DB_PORT: ${COLLABPADS_BACKEND_MONGO_DB_PORT}
+  COLLABPADS_BACKEND_MONGO_DB_NAME: ${COLLABPADS_BACKEND_MONGO_DB_NAME}
+  COLLABPADS_BACKEND_MONGO_DB_USER: ${COLLABPADS_BACKEND_MONGO_DB_USER}
+  COLLABPADS_BACKEND_MONGO_DB_PASSWORD: ${COLLABPADS_BACKEND_MONGO_DB_PASSWORD}
+  COLLABPADS_BACKEND_LOG_LEVEL: ${COLLABPADS_BACKEND_LOG_LEVEL}
+  COLLABPADS_BACKEND_HTTP_CLIENT_OPTIONS: ${COLLABPADS_BACKEND_HTTP_CLIENT_OPTIONS}
 
 services:
-
   wiki-web:
-    image: bluespice/wiki-free:${VERSION}
-    command: start-web
+    image: docker.bluespice.com/bluespice-${EDITION}/${EDITION}:${VERSION}
     environment:
       <<: *common-environment
+    command: start-web
+
     volumes:
       - ${DATADIR}/wiki:/data
 
   wiki-task:
-    image: bluespice/wiki-free:${VERSION}
-    command: start-task
+    image: docker.bluespice.com/bluespice-${EDITION}/${EDITION}:${VERSION}
+    command: ["start-task --runAll"]
     environment:
       <<: *common-environment
     volumes:
