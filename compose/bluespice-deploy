@@ -1,7 +1,7 @@
 #!/bin/bash
 source .env
 
-if [ !-f ${DATADIR} ];then
+if [ ! -d ${DATADIR} ];then
 echo "Creating Persistent-Data-Directories"
 mkdir -p ${DATADIR}/search/data/nodes/0
 mkdir -p ${DATADIR}/wiki
