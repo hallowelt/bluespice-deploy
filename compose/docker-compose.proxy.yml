@@ -1,7 +1,7 @@
 services:
 
   proxy:
-    image: nginxproxy/nginx-proxy:alpine
+    image: docker.bluespice.com/bluespice/proxy
     ports:
       - "443:443"
       - "80:80"
@@ -18,13 +18,16 @@ services:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PORT: 9090
-  collabpads-websocket:
+
+  collabpadsbackend:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
-      VIRTUAL_PORT: 8081
       VIRTUAL_PATH: /_collabpads/
+
   diagram:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_diagram/
       VIRTUAL_PORT: 8080
-      VIRTUAL_PATH: /_diagram
+      VIRTUAL_DEST: /
+
