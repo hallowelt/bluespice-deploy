@@ -29,11 +29,11 @@ services:
   collabpadsbackend:
     image: docker.bluespice.com/bluespice/collabpads:${VERSION}
     environment:
-      COLLABPADS_BACKEND_WIKI_BASEURL: ${WIKI_HOST}
+      COLLABPADS_BACKEND_WIKI_BASEURL: http://wiki-web:9090
       COLLABPADS_BACKEND_MONGO_DB_HOST: ${COLLABPADS_BACKEND_MONGO_DB_HOST}
       COLLABPADS_BACKEND_MONGO_DB_PORT: ${COLLABPADS_BACKEND_MONGO_DB_PORT}
       COLLABPADS_BACKEND_LOG_LEVEL: info
-      COLLABPADS_BACKEND_PORT: 80
+      COLLABPADS_BACKEND_PORT: 8081
 
   collabpadsbackend-database:
     image: mongo:4.4-focal

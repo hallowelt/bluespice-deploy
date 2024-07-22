@@ -23,6 +23,7 @@ services:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PATH: /_collabpads/
+      VIRTUAL_PORT: 8081
 
   diagram:
     environment:
