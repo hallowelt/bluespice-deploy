@@ -5,9 +5,9 @@ if [ ! -d ${DATADIR} ];then
 echo "Creating Persistent-Data-Directories"
 mkdir -p ${DATADIR}/search/data/nodes/0
 mkdir -p ${DATADIR}/wiki
-mkdir -p ${DATADIR}/mongo
 mkdir -p ${DATADIR}/proxy
 mkdir -p ${DATADIR}/database
+mkdir -p ${DATADIR}/database-collabpads
 sudo chown -R 1000:1000 ${DATADIR}/search
 sudo chown -R 1002:1002 ${DATADIR}/wiki
 fi

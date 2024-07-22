@@ -18,7 +18,7 @@ services:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PORT: 9090
 
-  collabpadsbackend:
+  collabpads:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PATH: /_collabpads/
