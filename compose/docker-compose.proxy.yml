@@ -1,13 +1,11 @@
-version: "3.7"
-
 services:
 
   proxy:
-    image: nginxproxy/nginx-proxy:alpine
+    image: bluespice/proxy:${VERSION}
     ports:
       - "443:443"
+      - "80:80"
     volumes:
-      - ${DATADIR}/proxy/conf.d:/etc/nginx/conf.d
       - ${DATADIR}/proxy/vhost.d:/etc/nginx/vhost.d
       - ${DATADIR}/proxy/html:/usr/share/nginx/html
       - ${DATADIR}/proxy/certs:/etc/nginx/certs:rw
@@ -15,30 +13,16 @@ services:
     labels:
       - com.github.nginx-proxy.nginx=true
 
-  letsencrypt:
-    image: nginxproxy/acme-companion
-    environment:
-      - DEFAULT_EMAIL=${ADMIN_MAIL}
-      - NGINX_PROXY_CONTAINER=proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${DATADIR}/letsencrypt:/etc/acme.sh
-    volumes_from:
-      - proxy
-    depends_on:
-      - proxy
-    profiles:
-      - letsencrypt
-
   wiki-web:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
-      VIRTUAL_PATH: /
+      VIRTUAL_PORT: 9090
 
-  collabpadsbackend:
+  collabpads:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PATH: /_collabpads/
+      VIRTUAL_PORT: 8081
 
   diagram:
     environment:

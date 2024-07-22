@@ -1,8 +1,9 @@
-version: "3.7"
-
 name: bluespice
 
 x-common-environment: &common-environment
+  VERSION: ${VERSION}
+  EDITION: ${EDITION}
+
   WIKI_NAME: ${WIKI_NAME}
   WIKI_LANG: ${WIKI_LANG}
   WIKI_PASSWORDSENDER: ${WIKI_PASSWORDSENDER}
@@ -11,30 +12,11 @@ x-common-environment: &common-environment
   WIKI_PORT: ${WIKI_PORT}
   WIKI_PROTOCOL: ${WIKI_PROTOCOL}
 
-  CACHE_HOST: ${CACHE_HOST}
-  CACHE_PORT: ${CACHE_PORT}
-
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_HOST: ${DB_HOST}
   DB_NAME: ${DB_NAME}
   DB_PREFIX: ${DB_PREFIX}
-
-  FORMULA_HOST: ${FORMULA_HOST}
-  FORMULA_PORT: ${FORMULA_PORT}
-  FORMULA_PROTOCOL: ${FORMULA_PROTOCOL}
-
-  PAGEPREVIEW_HOST: ${PAGEPREVIEW_HOST}
-  PAGEPREVIEW_PORT: ${PAGEPREVIEW_PORT}
-  PAGEPREVIEW_PROTOCOL: ${PAGEPREVIEW_PROTOCOL}
-
-  PDF_HOST: ${PDF_HOST}
-  PDF_PORT: ${PDF_PORT}
-  PDF_PROTOCOL: ${PDF_PROTOCOL}
-
-  SEARCH_HOST: ${SEARCH_HOST}
-  SEARCH_PORT: ${SEARCH_PORT}
-  SEARCH_PROTOCOL: ${SEARCH_PROTOCOL}
 
   SMTP_HOST: ${SMTP_HOST}
   SMTP_PORT: ${SMTP_PORT}
@@ -43,19 +25,20 @@ x-common-environment: &common-environment
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
 services:
-
   wiki-web:
-    image: bluespice/wiki-free:${VERSION}
-    command: start-web
+    image: docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
     environment:
       <<: *common-environment
+    command: start-web
+
     volumes:
       - ${DATADIR}/wiki:/data
 
   wiki-task:
-    image: bluespice/wiki-free:${VERSION}
-    command: start-task
+    image: docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
+    command: ["start-task --runAll"]
     environment:
       <<: *common-environment
+      BACKUP_HOUR: ${BACKUP_HOUR}
     volumes:
       - ${DATADIR}/wiki:/data
