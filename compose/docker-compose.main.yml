@@ -3,7 +3,6 @@ name: bluespice
 x-common-environment: &common-environment
   VERSION: ${VERSION}
   EDITION: ${EDITION}
-  BACKUP_HOUR: ${BACKUP_HOUR}
 
   WIKI_NAME: ${WIKI_NAME}
   WIKI_LANG: ${WIKI_LANG}
@@ -18,6 +17,7 @@ x-common-environment: &common-environment
   DB_HOST: ${DB_HOST}
   DB_NAME: ${DB_NAME}
   DB_PREFIX: ${DB_PREFIX}
+
   SMTP_HOST: ${SMTP_HOST}
   SMTP_PORT: ${SMTP_PORT}
   SMTP_USER: ${SMTP_USER}
@@ -39,5 +39,6 @@ services:
     command: ["start-task --runAll"]
     environment:
       <<: *common-environment
+      BACKUP_HOUR: ${BACKUP_HOUR}
     volumes:
       - ${DATADIR}/wiki:/data
