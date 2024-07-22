@@ -8,3 +8,6 @@ services:
   
   formula:
     image: bluespice/formula:${VERSION}
+
+  diagram:
+    image: bluespice/diagram:${VERSION}
