@@ -6,7 +6,6 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - ${DATADIR}/proxy/conf.d:/etc/nginx/conf.d
       - ${DATADIR}/proxy/vhost.d:/etc/nginx/vhost.d
       - ${DATADIR}/proxy/html:/usr/share/nginx/html
       - ${DATADIR}/proxy/certs:/etc/nginx/certs:rw
