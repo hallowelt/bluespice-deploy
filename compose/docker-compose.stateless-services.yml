@@ -1,13 +1,13 @@
 services:
 
   cache:
-    image: docker.bluespice.com/bluespice/cache:${VERSION}
+    image: bluespice/cache:${VERSION}
 
   pdf:
-    image: docker.bluespice.com/bluespice/pdf:${VERSION}
+    image: bluespice/pdf:${VERSION}
   
   formula:
-    image: docker.bluespice.com/bluespice/formula:${VERSION}
+    image: bluespice/formula:${VERSION}
   
   diagram:
-    image: docker.bluespice.com/bluespice/diagram:${VERSION}
+    image: bluespice/diagram:${VERSION}

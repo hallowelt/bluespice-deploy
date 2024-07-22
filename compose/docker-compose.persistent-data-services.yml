@@ -1,7 +1,7 @@
 services:
 
   search:
-    image: docker.bluespice.com/bluespice/search:${VERSION}
+    image: bluespice/search:${VERSION}
     volumes:
       - ${DATADIR}/search:/usr/share/opensearch/data
     healthcheck:
