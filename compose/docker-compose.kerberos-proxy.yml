@@ -1,0 +1,33 @@
+services:
+
+  proxy:
+    image: bluespice/proxy:${VERSION}
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ${DATADIR}/proxy/vhost.d:/etc/nginx/vhost.d
+      - ${DATADIR}/proxy/html:/usr/share/nginx/html
+      - ${DATADIR}/proxy/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      - com.github.nginx-proxy.nginx=true
+  
+
+  kerberos-proxy:
+    images: bluespice/kerberos-proxy:${VERSION}
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+
+  collabpads:
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_collabpads/
+      VIRTUAL_PORT: 8081
+
+  diagram:
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_diagram/
+      VIRTUAL_PORT: 8080
+      VIRTUAL_DEST: /
