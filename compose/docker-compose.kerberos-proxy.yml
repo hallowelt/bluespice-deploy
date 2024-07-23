@@ -16,6 +16,10 @@ services:
 
   kerberos-proxy:
     images: bluespice/kerberos-proxy:${VERSION}
+    volumes:
+      - ${DATADIR}/kerberos/krb5.conf:/etc/krb5.conf
+      - ${DATADIR}/kerberos/kerberos.keytab:/etc/kerberos.keytab
+
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
 
