@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+source .env
+
+if [ ! -d ${DATADIR} ];then
+echo "Creating Persistent-Data-Directories"
+mkdir -p ${DATADIR}/search/data/nodes/0
+mkdir -p ${DATADIR}/wiki
+mkdir -p ${DATADIR}/proxy
+mkdir -p ${DATADIR}/database
+mkdir -p ${DATADIR}/database-collabpads
+chown -R 1000:1000 ${DATADIR}/search
+chown -R 1002:1002 ${DATADIR}/wiki
+fi
+STATUS="$(systemctl is-active bluespice.service)"
+if [ "${STATUS}" != "active" ]; then
+    sed -i -e "s|<WORKDIR>|\${PWD}|g" bluespice.service
+    cp -r bluespice.service /etc/systemd/system
+    chmod +x /etc/systemd/system/bluespice.service
+    systemctl daemon-reload
+    systemctl enable bluespice.service
+fi
