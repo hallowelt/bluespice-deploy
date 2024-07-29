@@ -2,6 +2,43 @@
 
 See ["Multi-container Applications docker-compose, Targeting multiple environments"](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/multi-container-applications-docker-compose#targeting-multiple-environments) for more information.
 
+## For general Usage
+
+### Preparations
+Copy all these Files to the destinated Directory/disk
+
+copy .evn.example to .env and edit .env to your needs
+make bluespice-prepare and bluespice-deploy executable
+
+```sh
+chmod +x bluespice-prepare bluespice-deploy
+
+```
+
+run bluespice-prepare as sudo to create subdirectories and change Ownership of these Directories to the Container-Users
+
+```sh
+./bluespice-prepare
+```
+
+This also creates and enables  bluespice.service to start und gracefully stop the Containers on reboot/shutdown of the Server
+
+Pull images with
+```sh
+./bluespice-deploy pull
+```
+and do a first start with
+
+```sh
+./bluespice-deploy up -d
+```
+or 
+```sh
+systemctl start bluespice.service
+```
+
+
+
 ## Example
 
 ```sh
