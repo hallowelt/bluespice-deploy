@@ -55,6 +55,11 @@ On the first start, the `bluespice/search` container (OpenSearch) will fail, due
 ```sh
 sudo chown -R 1000:1000 ${DATADIR}/search
 ```
+Same goes for `bluespice/wiki` wich is now related to user 1002:1002
+```sh
+sudo chown -R 1002:1002 ${DATADIR}/wiki
+```
+The bluespice-prepare script cares for this in advance
 
 # Development
 
