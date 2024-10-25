@@ -12,8 +12,6 @@ services:
       - proxy
     depends_on:
       - proxy
-    profiles:
-      - letsencrypt
 
   wiki-web:
     environment:
