@@ -12,9 +12,6 @@ services:
       - proxy
     depends_on:
       - proxy
-    profiles:
-      - letsencrypt
-
   wiki-web:
     environment:
       LETSENCRYPT_HOST: ${WIKI_HOST}
