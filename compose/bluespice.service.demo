@@ -1,0 +1,14 @@
+[Unit]
+Description=BlueSpice-Docker startup routinie
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+WorkingDirectory=<WORKDIR>
+ExecStart=/bin/bash bluespice-deploy up -d
+ExecStop=/bin/bash bluespice-deploy down
+
+[Install]
+WantedBy=multi-user.target
