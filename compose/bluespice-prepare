@@ -5,22 +5,34 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 source .env
+WORKDIR="${PWD}"
 
 if [ ! -d ${DATADIR} ];then
-echo "Creating Persistent-Data-Directories"
-mkdir -p ${DATADIR}/search/data/nodes/0
-mkdir -p ${DATADIR}/wiki
-mkdir -p ${DATADIR}/proxy
-mkdir -p ${DATADIR}/database
-mkdir -p ${DATADIR}/database-collabpads
-chown -R 1000:1000 ${DATADIR}/search
-chown -R 1002:1002 ${DATADIR}/wiki
+	echo "Creating Persistent-Data-Directories"
+	mkdir -p ${DATADIR}/search/data/nodes/0
+	mkdir -p ${DATADIR}/wiki
+	mkdir -p ${DATADIR}/proxy
+	mkdir -p ${DATADIR}/database
+	mkdir -p ${DATADIR}/database-collabpads
+	chown -R 1000:1000 ${DATADIR}/search
+	chown -R 1002:1002 ${DATADIR}/wiki
+else
+	echo "Directories already set up"
 fi
+
 STATUS="$(systemctl is-active bluespice.service)"
 if [ "${STATUS}" != "active" ]; then
-    sed -i -e "s|<WORKDIR>|\${PWD}|g" bluespice.service
-    cp -r bluespice.service /etc/systemd/system
-    chmod +x /etc/systemd/system/bluespice.service
-    systemctl daemon-reload
-    systemctl enable bluespice.service
+	sed  "s|<WORKDIR>|${WORKDIR}|g" bluespice.service.demo > /etc/systemd/system/bluespice.service
+	chmod +x /etc/systemd/system/bluespice.service
+	systemctl daemon-reload
+	systemctl enable bluespice.service
+else
+	echo "service already set up"
+fi
+if [[ $(grep vm.max_map_count=262144 /etc/sysctl.conf) ]] || [[ $(grep -rin vm.max_map_count /etc/sysctl.d) ]] ; then
+	echo "max_map_count already set"
+else
+	echo "vm.max_map_count=262144" >> /etc/sysctl.d/11-map-count.conf
+	sysctl -p
+	echo "max_map_count is set for Opensearch"
 fi
