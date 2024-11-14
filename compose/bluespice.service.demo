@@ -12,4 +12,3 @@ ExecStop=/bin/bash bluespice-deploy down
 
 [Install]
 WantedBy=multi-user.target
-

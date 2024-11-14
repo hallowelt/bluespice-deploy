@@ -12,6 +12,7 @@ services:
       - proxy
     depends_on:
       - proxy
+
   wiki-web:
     environment:
       LETSENCRYPT_HOST: ${WIKI_HOST}
