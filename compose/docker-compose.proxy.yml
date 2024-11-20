@@ -16,6 +16,7 @@ services:
   wiki-web:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /
       VIRTUAL_PORT: 9090
 
   collabpads:
