@@ -1,5 +1,5 @@
 # BlueSpice "Deploy"
-
+<img style="display:block;margin:auto" src="./root-fs/var/www/html/Bluespice_Icon.svg" width="100" height="100" alt="BlueSpice MediaWiki" />
 This repo contains deployment code for the BlueSpice Wiki application
 
 Please see the [official helpdesk entry](https://en.wiki.bluespice.com/wiki/Setup:Installation_Guide/Docker) for more details.
