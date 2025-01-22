@@ -10,7 +10,7 @@ services:
       COLLABPADS_BACKEND_PORT: 8081
 
   collabpads-database:
-    image: mongo:4.4-focal
+    image: mongo:5.0-focal
     volumes:
       - ${DATADIR}/database-collabpads:/data/db
 
