@@ -5,6 +5,16 @@ EXTENDED_TOOLS=""
 
 
 if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
+	if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
+		echo "In order to access our ${EDITION}-Image please login to docker.bluespice.com"
+		docker login docker.bluespice.com
+		if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
+		echo -e "\n-------------\n"
+		echo "Please contact support@hallowelt.com for your Credentials against docker.bluespice.com"
+		echo -e "\n-------------\n"
+		exit
+		fi
+	fi
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
 	REPO=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
 else
