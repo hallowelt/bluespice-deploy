@@ -4,11 +4,11 @@ source .env
 EXTENDED_TOOLS=""
 
 
-if [ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]; then
+if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
-	BLUESPICE_REPOSITORY=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
+	REPO=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
 else
-	BLUESPICE_REPOSITORY=bluespice/wiki:${VERSION}
+	REPO=bluespice/wiki:${VERSION}
 fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
@@ -16,7 +16,8 @@ fi
 if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 fi
-	docker compose \
+	BLUESPICE_REPOSITORY=${REPO} \
+		docker compose \
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
