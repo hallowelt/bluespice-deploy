@@ -26,20 +26,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-  collabpads:
-    image: docker.bluespice.com/bluespice/collabpads:${VERSION}
-    environment:
-      COLLABPADS_BACKEND_WIKI_BASEURL: http://wiki-web:9090
-      COLLABPADS_BACKEND_MONGO_DB_HOST: collabpads-database
-      COLLABPADS_BACKEND_MONGO_DB_PORT: 27017
-      COLLABPADS_BACKEND_LOG_LEVEL: info
-      COLLABPADS_BACKEND_PORT: 8081
-
-  collabpads-database:
-    image: mongo:4.4-focal
-    volumes:
-      - ${DATADIR}/database-collabpads:/data/db
-
   wiki-web:
     depends_on:
         database:
