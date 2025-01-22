@@ -12,12 +12,16 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     labels:
       - com.github.nginx-proxy.nginx=true
+  
 
-  wiki-web:
+  kerberos-proxy:
+    images: bluespice/kerberos-proxy:${VERSION}
+    volumes:
+      - ${DATADIR}/kerberos/krb5.conf:/etc/krb5.conf
+      - ${DATADIR}/kerberos/kerberos.keytab:/etc/kerberos.keytab
+
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
-      VIRTUAL_PATH: /
-      VIRTUAL_PORT: 9090
 
   collabpads:
     environment:

@@ -26,7 +26,7 @@ x-common-environment: &common-environment
 
 services:
   wiki-web:
-    image: bluespice/wiki:${VERSION}
+    image: docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
     environment:
       <<: *common-environment
     command: start-web
@@ -35,7 +35,7 @@ services:
       - ${DATADIR}/wiki:/data
 
   wiki-task:
-    image: bluespice/wiki:${VERSION}
+    image: docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
     command: ["start-task --runAll"]
     environment:
       <<: *common-environment

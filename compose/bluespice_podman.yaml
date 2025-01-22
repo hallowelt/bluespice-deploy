@@ -1,0 +1,124 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Written by Fabian Spinar
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bluespice-podman-services
+  labels:
+    app: web
+spec:
+  containers:
+  ##WIKI
+    - name: wiki-web
+      image: docker.bluespice.com/bluespice-pro/wiki:4.5
+      ports:
+      - hostPort: 9090 
+        containerPort: 9090 
+      volumeMounts:
+      - mountPath: /opt/bluespice-data
+        name: _data-bluespice-1
+      envFrom:
+      - configMapRef:
+          name: bluespice-config
+      - configMapRef:
+          name: database-config
+    - name: wiki-task
+      image: docker.bluespice.com/bluespice-pro/wiki:4.5
+      command: ["start-task --runAll"]
+      volumeMounts:
+      - mountPath: /opt/bluespice-data
+        name: _data-bluespice-1
+  ##DATABASES
+    - name: database
+      image: mariadb:10.5
+      containerPort: 3306
+      volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: _data-mariadb-data-0
+        - mountPath: /var/log/mysql
+          name: _data-mariadb-logs-1
+      envFrom:
+        - configMapRef:
+          name: database-config
+    - name: collabpads-database
+      image: mongo:5.0-focal
+      volumeMounts:
+        - mountPath: /data/db
+          name: _data-mongodb-data-0
+    - name: search
+      image: docker.bluespice.com/bluespice/search:4.5
+      volumeMounts:    
+        - mountPath: /usr/share/opensearch/data
+          name: _data-opensearch-0
+  ##Services
+    - name: collabpads-backend
+      image: docker.bluespice.com/bluespice/collabpads:4.5
+    - name: cache
+      image: bluespice/cache:4.5
+    - name: npdf
+      image: bluespice/pdf:4.5
+    - name: formula
+      image: bluespice/formula:4.5
+    - name: diagram
+      image: bluespice/diagram:4.5
+      hostport: 8080
+  ##Volumes
+  volumes:
+  - hostPath:
+      path: /var/bluespice-docker/bluespice-data
+      type: Directory
+    name: _data-bluespice-0
+  - hostPath:
+      path: /var/bluespice-docker/mysql-data
+      type: Directory
+    name: _data-mariadb-data-0
+  - hostPath:
+      path: /var/bluespice-docker/mysql-logs
+      type: Directory
+    name: _data-mariadb-logs-1
+  - hostPath:
+      path: /var/bluespice-docker/mongodb
+      type: Directory
+    name: _data-mongodb-data-0
+  - hostPath:
+      path: /var/bluespice-docker/opensearch/data
+      type: Directory
+    name: _data-opensearch-0  
+  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bluespice-config
+data:
+  VERSION: 4.5
+  EDITION: pro
+  BACKUP_HOUR: 4
+  WIKI_NAME: FabiansFantastischerPodmanTest
+  WIKI_LANG: de
+  WIKI_PASSWORDSENDER: wiki@bluespice.com
+  WIKI_EMERGENCYCONTACT:  wiki@bluespice.com
+  WIKI_HOST: rhel-wiki.test.hw.local
+  WIKI_PORT: 9090
+  WIKI_PROTOCOL: http
+  SMTP_HOST:  
+  SMTP_PORT:  
+  SMTP_USER:  
+  SMTP_PASS:  
+  SMTP_ID_HOST:  
+
+  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+data:
+  DB_USER: bluespice
+  DB_PASS: bluespice
+  DB_ROOT_PASS: bluespice
+  DB_HOST: database
+  DB_NAME: bluespice
+  DB_PREFIX:
