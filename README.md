@@ -20,18 +20,23 @@ chmod +x bluespice-prepare bluespice-deploy
 
 ```
 
-run bluespice-prepare as sudo to create subdirectories and change Ownership of these Directories to the Container-Users
+run bluespice-prepare as sudo to create subdirectories and change Ownership of these Directories to the Container-UID
 
 ```sh
-./bluespice-prepare
+sudo ./bluespice-prepare
 ```
 
 This also creates and enables  bluespice.service to start und gracefully stop the Containers on reboot/shutdown of the Server
+
+If you have a valid Subscription please Contact support@hallowelt.com for access to our docker-registry and change EDITION accordingly.
+
+bluespice-deploy will check for your credentials and log you in.
 
 Pull images with
 ```sh
 ./bluespice-deploy pull
 ```
+
 and do a first start with
 
 ```sh
