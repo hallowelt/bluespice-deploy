@@ -11,7 +11,7 @@ services:
       timeout: 5s
       retries: 10
   database:
-    image: bluespice/database:${VERSION}
+    image: mariadb:10.5
     volumes:
       - ${DATADIR}/database/data:/var/lib/mysql
       - ${DATADIR}/database/logs:/var/log/mysql
