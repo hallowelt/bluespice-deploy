@@ -38,3 +38,9 @@ services:
             condition: service_healthy
         search:
             condition: service_healthy
+  antivirus:
+    image: clamav/clamav:stable
+    volumes:
+      - ${DATADIR}/antivirus:/var/lib/clamav
+    profiles:
+      - av
