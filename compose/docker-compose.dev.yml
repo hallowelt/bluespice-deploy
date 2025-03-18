@@ -3,36 +3,59 @@ version: "3.7"
 services:
 
   wiki-web:
-    image: ${BLUESPICE_REPOSITORY}
+    image: bs-wiki-dev:${VERSION}
+    pull_policy: missing
     volumes:
       - ${CODEDIR}:/app/bluespice/w
     extra_hosts:
       # For Linux: This extra_hosts section enables Xdebug-IDE communication:
       - "host.docker.internal:host-gateway"
-      - "${WIKI_HOST}:host-gateway"
+      #- "${WIKI_HOST}:host-gateway"
     environment:
       DEV_WIKI_DEBUG: ${DEV_WIKI_DEBUG}
       #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
 
   wiki-task:
-    image: ${BLUESPICE_REPOSITORY}
+    image: bs-wiki-dev:${VERSION}
+    pull_policy: missing
     volumes:
       - ${CODEDIR}:/app/bluespice/w
     extra_hosts:
       # For Linux: This extra_hosts section enables Xdebug-IDE communication:
       - "host.docker.internal:host-gateway"
-      - "${WIKI_HOST}:host-gateway"
+      #- "${WIKI_HOST}:host-gateway"
     environment:
       DEV_WIKI_DEBUG: ${DEV_WIKI_DEBUG}
       #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
 
   database:
+    image: bluespice/database:${VERSION}
+    pull_policy: missing
     ports:
       - "3306:3306"
 
   collabpads:
+    pull_policy: missing
     environment:
       COLLABPADS_BACKEND_LOG_LEVEL: debug
+
+  search:
+    pull_policy: missing
+
+  proxy:
+    pull_policy: missing
+
+  cache:
+    pull_policy: missing
+
+  pdf:
+    pull_policy: missing
+
+  formula:
+    pull_policy: missing
+
+  diagram:
+    pull_policy: missing
 
   dev-mailhog:
     image: mailhog/mailhog:latest
