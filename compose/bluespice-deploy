@@ -5,18 +5,8 @@ EXTENDED_TOOLS=""
 
 
 if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
-	if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
-		echo "In order to access our ${EDITION}-Image please login to docker.bluespice.com"
-		docker login docker.bluespice.com
-		if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
-		echo -e "\n-------------\n"
-		echo "Please contact support@hallowelt.com for your Credentials against docker.bluespice.com"
-		echo -e "\n-------------\n"
-		exit
-		fi
-	fi
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
-	REPO=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
+	REPO=bluespice/wiki:${VERSION}
 else
 	REPO=bluespice/wiki:${VERSION}
 fi
@@ -26,6 +16,9 @@ fi
 if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 fi
+if [ "${EXPERIMENTAL}" == "true" ]; then
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.experimental.yml"
+fi
 	BLUESPICE_REPOSITORY=${REPO} \
 		docker compose \
 		-f docker-compose.main.yml \
@@ -33,4 +26,5 @@ fi
 		-f docker-compose.stateless-services.yml \
 		-f docker-compose.proxy.yml \
 		${EXTENDED_TOOLS} \
+		-f docker-compose.dev.yml \
 		$@
