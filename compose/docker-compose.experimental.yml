@@ -1,0 +1,65 @@
+version: "3.7"
+
+services:
+
+  jobqueuedb:
+    image: redis:6.2
+    volumes:
+      - ${DATADIR}/jobqueuedb:/data
+    healthcheck:
+      test: redis-cli ping
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  wiki-task:
+    depends_on:
+        jobqueuedb:
+            condition: service_healthy
+
+  messagebroker:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MESSAGEBROKER_USER}
+      RABBITMQ_DEFAULT_PASS: ${MESSAGEBROKER_PASS}
+
+  analytics:
+    #TODO: Configure scriptpath, wire authentication, ...
+    image: matomo:latest
+    environment:
+      MATOMO_DATABASE_HOST: ${DB_HOST}
+      MATOMO_DATABASE_TABLES_PREFIX: Matomo_${DB_PREFIX}
+      MATOMO_DATABASE_USERNAME: ${DB_USER}
+      MATOMO_DATABASE_PASSWORD: ${DB_PASS}
+      MATOMO_DATABASE_DBNAME : ${DB_NAME}
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 80
+      VIRTUAL_PATH: /_analytics/
+      VIRTUAL_DEST: /
+
+  monitoring-loki:
+    image: grafana/loki:2.0.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ${DATADIR}/monitoring-loki:/etc/loki
+
+  monitoring-promtail:
+    image: grafana/promtail:2.0.0
+    volumes:
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ${DATADIR}/monitoring-promtail:/etc/promtail
+    command: -config.file=/etc/promtail/config.yaml
+
+  monitoring:
+    image: grafana/grafana:7.3.1
+    volumes:
+      - ${DATADIR}/grafana:/var/lib/grafana
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 3000
+      VIRTUAL_PATH: /_monitoring/
+      VIRTUAL_DEST: /

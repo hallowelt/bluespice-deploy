@@ -1,0 +1,173 @@
+version: "3.7"
+
+services:
+
+  wiki-web:
+    image: bs-wiki-dev:${VERSION}
+    pull_policy: missing
+    volumes:
+      - ${CODEDIR}:/app/bluespice/w
+    extra_hosts:
+      # For Linux: This extra_hosts section enables Xdebug-IDE communication:
+      - "host.docker.internal:host-gateway"
+      #- "${WIKI_HOST}:host-gateway"
+    environment:
+      DEV_WIKI_DEBUG: ${DEV_WIKI_DEBUG}
+      #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
+
+  wiki-task:
+    image: bs-wiki-dev:${VERSION}
+    pull_policy: missing
+    volumes:
+      - ${CODEDIR}:/app/bluespice/w
+    extra_hosts:
+      # For Linux: This extra_hosts section enables Xdebug-IDE communication:
+      - "host.docker.internal:host-gateway"
+      #- "${WIKI_HOST}:host-gateway"
+    environment:
+      DEV_WIKI_DEBUG: ${DEV_WIKI_DEBUG}
+      #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
+
+  database:
+    image: bluespice/database:${VERSION}
+    pull_policy: missing
+    ports:
+      - "3306:3306"
+
+  collabpads:
+    pull_policy: missing
+    environment:
+      COLLABPADS_BACKEND_LOG_LEVEL: debug
+
+  search:
+    pull_policy: missing
+
+  proxy:
+    pull_policy: missing
+
+  cache:
+    pull_policy: missing
+
+  pdf:
+    pull_policy: missing
+
+  formula:
+    pull_policy: missing
+
+  diagram:
+    pull_policy: missing
+
+  dev-mailhog:
+    image: mailhog/mailhog:latest
+    container_name: dev-mailhog
+    ports:
+      - "8025:8025"
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 8025
+      VIRTUAL_PATH: /_mailhog/
+      VIRTUAL_DEST: /
+
+  dev-dbadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: dev-dbadmin
+    environment:
+      PMA_HOST: ${DB_HOST}
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASS}
+      PMA_ABSOLUTE_URI: http://dev-dbadmin/_dbadmin
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_dbadmin/
+      VIRTUAL_DEST: /
+
+  dev-searchdashboards:
+    image: opensearchproject/opensearch-dashboards:2.11.1
+    container_name: dev-searchdashboards
+    environment:
+      # https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/config/opensearch_dashboards.yml
+      SERVER_BASEPATH: /_searchdashboards
+      SERVER_REWRITEBASEPATH: true
+      OPENSEARCH_HOSTS: '["http://search:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 5601
+      VIRTUAL_PATH: /_searchdashboards/
+
+  dev-mongodbadmin:
+    image: mongo-express
+    container_name: dev-mongodbadmin
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://collabpads-database:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: ""
+      ME_CONFIG_BASICAUTH_PASSWORD: ""
+      ME_CONFIG_SITE_BASEURL: /_mongodbadmin
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 8081
+      VIRTUAL_PATH: /_mongodbadmin/
+
+  dev-s3:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ${DATADIR}/s3:/data
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: HalloWelt11
+    command: server /data --console-address ":9001"
+    profiles:
+      - s3
+
+  dev-keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: dev-keycloak
+    command:
+      - start-dev
+      - --proxy-headers=xforwarded
+      - --hostname-strict=false
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: ${WIKI_HOST}
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_URL: https://${WIKI_HOST}/_sso/
+      KEYCLOAK_FRONTEND_URL: https://${WIKI_HOST}/_sso/
+      KC_HTTP_RELATIVE_PATH: /_sso
+      KC_PROXY: edge
+      PROXY_ADDRESS_FORWARDING: "true"
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PORT: 8080
+      VIRTUAL_PATH: /_sso/
+    volumes:
+      - ${DATADIR}/keycloak:/opt/keycloak/data
+    extra_hosts:
+      - "${WIKI_HOST}:host-gateway"
+    profiles:
+      - sso
+
+  dev-ldap:
+    image: osixia/openldap:1.5.0
+    container_name: dev-ldap
+    environment:
+      LDAP_ORGANISATION: "ACME Corporation"
+      LDAP_DOMAIN: "acme.local"
+      LDAP_ADMIN_PASSWORD: admin
+    volumes:
+      - ${DATADIR}/ldap:/var/lib/ldap
+    profiles:
+      - sso
+
+  dev-ldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: dev-ldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: dev-ldap
+      PHPLDAPADMIN_HTTPS: "false"
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_ldapadmin/
+      VIRTUAL_DEST: /
+    depends_on:
+      - dev-ldap
+    profiles:
+      - sso

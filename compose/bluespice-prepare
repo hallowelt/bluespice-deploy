@@ -11,11 +11,15 @@ if [[ ! -d ${DATADIR} || ${1} == "--force" ]];then
 	echo "Creating persistent Data-Directories"
 	mkdir -p ${DATADIR}/search/data/nodes/0
 	mkdir -p ${DATADIR}/wiki
-	mkdir -p ${DATADIR}/proxy
-	mkdir -p ${DATADIR}/database
+	mkdir -p ${DATADIR}/proxy/certs
+	mkdir -p ${DATADIR}/proxy/html
+	mkdir -p ${DATADIR}/proxy/vhost.d
+	mkdir -p ${DATADIR}/database/data
+	mkdir -p ${DATADIR}/database/logs
 	
 	if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 		mkdir -p ${DATADIR}/database-collabpads
+		chown -R 999:999 ${DATADIR}/database-collabpads
 	fi
 else
 	echo "Directories already set up"
@@ -24,16 +28,18 @@ echo "Changing User-Permission on persistent Data-Directories"
 
 chown -R 1000:1000 ${DATADIR}/search
 chown -R 1002:1002 ${DATADIR}/wiki
+chown -R 999:999 ${DATADIR}/proxy
+chown -R 999:999 ${DATADIR}/database
 
-STATUS="$(systemctl is-active bluespice.service)"
-if [[ "${STATUS}" != "active" || ${1} == "--force" ]]; then
-	sed  "s|<WORKDIR>|${WORKDIR}|g" bluespice.service.demo > /etc/systemd/system/bluespice.service
-	chmod +x /etc/systemd/system/bluespice.service
-	systemctl daemon-reload
-	systemctl enable bluespice.service
-else
-	echo "service already set up"
-fi
+#STATUS="$(systemctl is-active bluespice.service)"
+#if [[ "${STATUS}" != "active" || ${1} == "--force" ]]; then
+#	sed  "s|<WORKDIR>|${WORKDIR}|g" bluespice.service.demo > /etc/systemd/system/bluespice.service
+#	chmod +x /etc/systemd/system/bluespice.service
+#	systemctl daemon-reload
+#	systemctl enable bluespice.service
+#else
+#	echo "service already set up"
+#fi
 if [[ $(grep vm.max_map_count=262144 /etc/sysctl.conf) ]] || [[ $(grep -rin vm.max_map_count /etc/sysctl.d) ]] ; then
 	echo "max_map_count already set"
 else
