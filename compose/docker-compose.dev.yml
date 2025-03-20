@@ -29,10 +29,30 @@ services:
       #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
 
   database:
-    image: bluespice/database:${VERSION}
+    image: linuxserver/mariadb:11.4.4
+    #image: mariadb:10.5
     pull_policy: missing
+    volumes:
+      - ${DATADIR}/database/data:/config/databases
+      - ${DATADIR}/database/logs:/config/log
+    #user: "999:999"
     ports:
       - "3306:3306"
+    environment:
+      - PUID=999
+      - PGID=999
+      - TZ=Europe/Berlin
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      #- REMOTE_SQL=http://database
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   collabpads:
     pull_policy: missing
