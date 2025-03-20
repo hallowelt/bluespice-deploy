@@ -16,12 +16,12 @@ services:
       - ${DATADIR}/database/data:/var/lib/mysql
       - ${DATADIR}/database/logs:/var/log/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
+      - MARIADB_ROOT_PASSWORD=${DB_PASS}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASS}
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MARIADB_ROOT_PASSWORD
       start_period: 5s
       interval: 5s
       timeout: 5s
