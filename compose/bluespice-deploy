@@ -25,12 +25,13 @@ if [ "${LETSENCRYPT}" == "true" ]; then
 fi
 if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
+else
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
 	BLUESPICE_REPOSITORY=${REPO} \
 		docker compose \
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
-		-f docker-compose.proxy.yml \
 		${EXTENDED_TOOLS} \
 		$@
