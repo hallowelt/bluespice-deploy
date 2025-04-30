@@ -13,7 +13,7 @@ services:
       VIRTUAL_PORT: 8081
 
   collabpads-database:
-    image: mongo:5.0-focal
+    image: mongo:8.0
     volumes:
       - ${DATADIR}/database-collabpads:/data/db
 
