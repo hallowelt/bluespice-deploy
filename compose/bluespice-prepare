@@ -11,14 +11,22 @@ if [[ ! -d ${DATADIR} || ${1} == "--force" ]];then
 	echo "Creating persistent Data-Directories"
 	mkdir -p ${DATADIR}/search/data/nodes/0
 	mkdir -p ${DATADIR}/wiki
-	mkdir -p ${DATADIR}/proxy
 	mkdir -p ${DATADIR}/database
+	mkdir -p ${DATADIR}/proxy
 	
 	if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 		mkdir -p ${DATADIR}/database-collabpads
 	fi
 else
 	echo "Directories already set up"
+fi
+
+if [[ ${LETSENCRYPT} ]];then
+
+	echo "Preparing Letsencrypt"
+	mkdir -p ${DATADIR}/proxy/letsencrypt
+	touch 	 ${DATADIR}/proxy/letsencrypt/acme.json
+	chmod 600 ${DATADIR}/proxy/letsencrypt/acme.json
 fi
 echo "Changing User-Permission on persistent Data-Directories"
 

@@ -1,18 +1,40 @@
 services:
 
-  letsencrypt:
-    image: nginxproxy/acme-companion
-    environment:
-      - DEFAULT_EMAIL=${ADMIN_MAIL}
-      - NGINX_PROXY_CONTAINER=proxy
+  proxy:
+    image: traefik:3.0  
+    command:  
+      - "--log=true"
+      - "--accesslog=true"
+      - "--log.level=debug"
+      - "--entrypoints.websecure.address=:443"
+      - "--api=true"  
+      - "--api.insecure=false"  
+      - "--providers.docker=true"  
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=administrator@hallowelt.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${DATADIR}/letsencrypt:/etc/acme.sh
-    volumes_from:
-      - proxy
-    depends_on:
-      - proxy
-
+      - ${DATADIR}/proxy/letsencrypt:/letsencrypt  
+      - /var/run/docker.sock:/var/run/docker.sock
   wiki-web:
-    environment:
-      LETSENCRYPT_HOST: ${WIKI_HOST}
+    labels:  
+      - "traefik.http.routers.wiki-web.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/`)"
+      - "traefik.http.routers.wiki-web.entrypoints=websecure"
+      - "traefik.http.services.wiki-web.loadbalancer.server.port=9090"
+      - "traefik.http.routers.wiki-web.tls.certresolver=myresolver"
+
+  diagram:
+    labels:  
+      - "traefik.http.routers.diagram.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/_diagram`)"
+      - "traefik.http.middlewares.diagrampathstrip.stripprefix.prefixes=/_diagram"
+      - "traefik.http.routers.diagram.entrypoints=websecure"
+      - "traefik.http.routers.diagram.middlewares=diagrampathstrip"
+      - "traefik.http.services.diagram.loadbalancer.server.port=8080"
+      - "traefik.http.routers.diagram.tls.certresolver=myresolver"

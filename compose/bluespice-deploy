@@ -20,9 +20,14 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 else
 	REPO=bluespice/wiki:${VERSION}
 fi
+
+## Letsencrypt or not?
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
+else
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
+##Kerberos?
 if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 fi
@@ -31,6 +36,5 @@ fi
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
-		-f docker-compose.proxy.yml \
 		${EXTENDED_TOOLS} \
 		$@
