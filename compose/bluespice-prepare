@@ -21,12 +21,17 @@ else
 	echo "Directories already set up"
 fi
 
-if [[ ${LETSENCRYPT} ]];then
+if [[ ${LETSENCRYPT} == true ]];then
 
 	echo "Preparing Letsencrypt"
 	mkdir -p ${DATADIR}/proxy/letsencrypt
 	touch 	 ${DATADIR}/proxy/letsencrypt/acme.json
 	chmod 600 ${DATADIR}/proxy/letsencrypt/acme.json
+else
+	 mkdir -p ${DATADIR}/proxy/certs
+	 if [[ ! -f ${DATADIR}/proxy/traefik.yml || ${1} == "--force" ]];then
+	 	echo -e "tls:\n  certificates:\n    - certFile: /certs/${WIKI_HOST}.crt\n      keyFile:/certs/${WIKI_HOST}.key" > ${DATADIR}/proxy/traefik.yml
+	 fi
 fi
 echo "Changing User-Permission on persistent Data-Directories"
 

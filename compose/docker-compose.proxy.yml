@@ -28,14 +28,14 @@ services:
       - "traefik.http.routers.wiki-web.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/`)"
       - "traefik.http.routers.wiki-web.entrypoints=websecure"
       - "traefik.http.services.wiki-web.loadbalancer.server.port=9090"
-      - "traefik.http.routers.wiki-web.tls.certresolver=myresolver"
-
+      - "traefik.http.routers.wiki-web.tls=true"
   diagram:
     labels:  
       - "traefik.http.routers.diagram.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/_diagram`)"
       - "traefik.http.middlewares.diagrampathstrip.stripprefix.prefixes=/_diagram"
-      - "traefik.http.routers.diagram.entrypoints=websecure"
+      - "traefik.http.routers.diagram.entrypoints=web,websecure"
       - "traefik.http.routers.diagram.middlewares=diagrampathstrip"
       - "traefik.http.services.diagram.loadbalancer.server.port=8080"
-      - "traefik.http.routers.diagram.tls.certresolver=myresolver"
+      - "traefik.http.routers.diagram.tls=true"
+
 
