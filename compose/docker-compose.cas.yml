@@ -1,0 +1,23 @@
+services:
+    postgresql:
+      image: docker.io/bitnami/postgresql:latest
+      environment:
+        ALLOW_EMPTY_PASSWORD: yes
+        POSTGRESQL_USERNAME: bn_keycloak
+        POSTGRESQL_DATABASE: bitnami_keycloak
+    keycloak:
+      image: docker.io/bitnami/keycloak:latest
+      environment:
+        KEYCLOAK_CREATE_ADMIN_USER: true
+      depends_on:
+        - postgresql
+      Ports:
+        - "80:8080"
+
+          #labels:
+          # - "traefik.http.routers.keycloak.rule=Host(`$WIKI_HOST`)"
+          # - "traefik.http.routers.keycloak.entrypoints=websecure"
+          # - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+          #- "traefik.http.services.keycloak.tls.certresolver=myresolver"
+
+
