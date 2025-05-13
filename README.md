@@ -93,4 +93,16 @@ You can now access the application via `https://mydev.localhost`.
 
 ## Debugging
 If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entrypoint` GPC (=`$_REQUEST`) to a value matching the `MW_ENTRY_POINT` constant in context of the application to enable full debug log to `stdout` for any call to the specified entry point.
->>>>>>> upstream/main
+
+## ENV vars
+
+| Variable                     | Default Value  | Description                                          | Optional |
+|------------------------------|----------------|------------------------------------------------------|----------|
+| `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
+| `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
+| `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
+| `SERVICES_REPOSITORY_PATH`   | ``             | defie custom Services-Repo (mostly for Testing)      | Yes      |
+
+
+For more Variables please also check:
+https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md
