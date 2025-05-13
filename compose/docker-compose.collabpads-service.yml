@@ -20,6 +20,12 @@ services:
   collabpads-database:
     image: mongo:8.0
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      start_period: 5s
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
       - ${DATADIR}/database-collabpads:/data/db
 

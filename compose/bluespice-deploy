@@ -30,14 +30,17 @@ fi
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
 	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}
 else
-	BLUESPICE_REPO=bluespice
+	BLUESPICE_SERVICE_REPOSITORY='bluespice'
 fi
 ##allow custom wiki image for testing
 if [ -n "${BLUESPICE_WIKI_IMAGE}" ]; then
 	WIKI_REPO=${BLUESPICE_WIKI_IMAGE}
 fi
-	BLUESPICE_WIKI_REPOSITORY=${WIKI_REPO} \
+
+	BLUESPICE_WIKI_REPOSITORY=${WIKI_REPO}	\
+	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
 		docker compose \
+		-f docker-compose.helper-service.yml \
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
