@@ -101,7 +101,8 @@ If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entr
 | `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
 | `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
 | `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
-| `SERVICES_REPOSITORY_PATH`   | ``             | defie custom Services-Repo (mostly for Testing)      | Yes      |
+| `SERVICES_REPOSITORY_PATH`   | ``             | define custom Services-Repo (mostly for Testing)     | Yes      |
+| `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
 
 
 For more Variables please also check:
