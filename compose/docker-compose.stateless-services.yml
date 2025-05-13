@@ -1,13 +1,15 @@
 services:
-
   cache:
-    image: bluespice/cache:${VERSION}
-
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
+    restart: unless-stopped
   pdf:
-    image: bluespice/pdf:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
+    restart: unless-stopped
   
   formula:
-    image: bluespice/formula:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
+    restart: unless-stopped
 
   diagram:
-    image: bluespice/diagram:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
+    restart: unless-stopped

@@ -1,7 +1,10 @@
 services:
 
   search:
-    image: bluespice/search:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/search:${VERSION}
+    restart: unless-stopped
+    depends_on:
+      - prepare
     volumes:
       - ${DATADIR}/search:/usr/share/opensearch/data
     healthcheck:
@@ -11,17 +14,20 @@ services:
       timeout: 5s
       retries: 10
   database:
-    image: mariadb:10.5
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}
+    restart: unless-stopped
+    depends_on:
+      - prepare
     volumes:
       - ${DATADIR}/database/data:/var/lib/mysql
       - ${DATADIR}/database/logs:/var/log/mysql
     environment:
-      - MARIADB_ROOT_PASSWORD=${DB_PASS}
-      - MARIADB_DATABASE=${DB_NAME}
-      - MARIADB_USER=${DB_USER}
-      - MARIADB_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MARIADB_ROOT_PASSWORD
+      test: mysqladmin ping 
       start_period: 5s
       interval: 5s
       timeout: 5s

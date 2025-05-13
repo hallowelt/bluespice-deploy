@@ -1,41 +1,29 @@
 services:
 
   proxy:
-    image: traefik:3.0  
-    command:  
-      - "--log=true"
-      - "--accesslog=true"
-      - "--log.level=debug"
-      - "--entrypoints.websecure.address=:443"
-      - "--api=true"  
-      - "--api.insecure=false"  
-      - "--providers.docker=true"  
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--providers.file.directory=/etc/traefik/dynamic_conf"
-      - "--providers.file.watch=true"
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/proxy:${VERSION}
+    restart: unless-stopped
     ports:
-      - "80:80"
       - "443:443"
+      - "80:80"
     volumes:
-      - ${DATADIR}/proxy/certs/:/certs/:ro
-      - ${DATADIR}/proxy/traefik.yml:/etc/traefik/dynamic_conf/conf.yml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DATADIR}/proxy/vhost.d:/etc/nginx/vhost.d
+      - ${DATADIR}/proxy/html:/usr/share/nginx/html
+      - ${DATADIR}/proxy/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      - com.github.nginx-proxy.nginx=true
+
   wiki-web:
-    labels:  
-      - "traefik.http.routers.wiki-web.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/`)"
-      - "traefik.http.routers.wiki-web.entrypoints=websecure"
-      - "traefik.http.services.wiki-web.loadbalancer.server.port=9090"
-      - "traefik.http.routers.wiki-web.tls=true"
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /
+      VIRTUAL_PORT: 9090
+
+
   diagram:
-    labels:  
-      - "traefik.http.routers.diagram.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/_diagram`)"
-      - "traefik.http.middlewares.diagrampathstrip.stripprefix.prefixes=/_diagram"
-      - "traefik.http.routers.diagram.entrypoints=web,websecure"
-      - "traefik.http.routers.diagram.middlewares=diagrampathstrip"
-      - "traefik.http.services.diagram.loadbalancer.server.port=8080"
-      - "traefik.http.routers.diagram.tls=true"
-
-
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_diagram/
+      VIRTUAL_PORT: 8080
+      VIRTUAL_DEST: /

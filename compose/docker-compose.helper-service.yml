@@ -1,0 +1,7 @@
+services:  
+  prepare:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    volumes:
+      - ${DATADIR}:/data
+    restart: no
+    command: ["prepare-bluespice"]

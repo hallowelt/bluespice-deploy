@@ -1,22 +1,25 @@
 services: 
 
   collabpads:
-    image: bluespice/collabpads:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/collabpads:${VERSION}
+    restart: unless-stopped
+    depends_on:
+      collabpads-database:
+        condition: service_healthy
+        restart: true
     environment:
       COLLABPADS_BACKEND_WIKI_BASEURL: http://wiki-web:9090
       COLLABPADS_BACKEND_MONGO_DB_HOST: collabpads-database
       COLLABPADS_BACKEND_MONGO_DB_PORT: 27017
       COLLABPADS_BACKEND_LOG_LEVEL: info
       COLLABPADS_BACKEND_PORT: 8081
-    labels:  
-      - "traefik.http.routers.collabpads.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/_collabpads`)"
-      - "traefik.http.middlewares.collabpadspathstrip.stripprefix.prefixes=/_collabpads"
-      - "traefik.http.routers.collabpads.entrypoints=websecure"
-      - "traefik.http.routers.collabpads.middlewares=collabpadspathstrip"
-      - "traefik.http.services.collabpads.loadbalancer.server.port=8081"
-      - "traefik.http.routers.collabpads.tls=true"
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_collabpads/
+      VIRTUAL_PORT: 8081
+
   collabpads-database:
     image: mongo:8.0
+    restart: unless-stopped
     volumes:
       - ${DATADIR}/database-collabpads:/data/db
 
