@@ -1,3 +1,23 @@
+x-common-environment: &common-environment
+  VERSION: ${VERSION}
+  EDITION: ${EDITION}
+  DATADIR: ${DATADIR}
+  WIKI_NAME: ${WIKI_NAME}
+  WIKI_LANG: ${WIKI_LANG}
+  WIKI_PASSWORDSENDER: ${WIKI_PASSWORDSENDER}
+  WIKI_EMERGENCYCONTACT: ${WIKI_EMERGENCYCONTACT}
+  WIKI_HOST: ${WIKI_HOST}
+  WIKI_PORT: ${WIKI_PORT}
+  WIKI_PROTOCOL: ${WIKI_PROTOCOL}
+
+  DB_USER: ${DB_USER}
+  DB_PASS: ${DB_PASS}
+  DB_HOST: ${DB_HOST}
+  DB_NAME: ${DB_NAME}
+  DB_PREFIX: ${DB_PREFIX}
+
+  SMTP_HOST: ${SMTP_HOST}
+
 services:  
   prepare:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
@@ -5,3 +25,13 @@ services:
       - ${DATADIR}:/data
     restart: no
     command: ["prepare-bluespice"]
+  upgrade:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    volumes:
+      - ${DATADIR}:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      <<: *common-environment
+
+    restart: no
+    command: ["sleep", "3600"]
