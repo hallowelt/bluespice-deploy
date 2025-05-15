@@ -19,8 +19,7 @@ services:
     depends_on:
       - prepare
     volumes:
-      - ${DATADIR}/database/data:/var/lib/mysql
-      - ${DATADIR}/database/logs:/var/log/mysql
+      - ${DATADIR}/database/data:/config/databases
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=${DB_NAME}
