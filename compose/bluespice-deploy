@@ -16,7 +16,7 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 		fi
 	fi
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
-	WIKI_REPO=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
+	WIKI_REPO=docker.bluespice.com/bluespice/wiki:${VERSION}
 else
 	WIKI_REPO=bluespice/wiki:${VERSION}
 fi
