@@ -34,4 +34,4 @@ services:
       <<: *common-environment
 
     restart: no
-    command: ["sleep", "3600"]
+    command: ["/app/bin/upgrade-pipeline"]
