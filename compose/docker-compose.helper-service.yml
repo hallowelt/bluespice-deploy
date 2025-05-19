@@ -21,12 +21,14 @@ x-common-environment: &common-environment
 services:  
   prepare:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    container_name: bluespice-prepare
     volumes:
       - ${DATADIR}:/data
     restart: no
     command: ["prepare-bluespice"]
   upgrade:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    container_name: bluespice-upgrade
     volumes:
       - ${DATADIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
@@ -35,3 +37,14 @@ services:
 
     restart: no
     command: ["/app/bin/upgrade-pipeline"]
+
+
+  search:
+    depends_on:
+      - prepare
+  database:
+    depends_on:
+      - prepare
+  wiki-task:
+    depends_on:
+      - upgrade

@@ -2,9 +2,8 @@ services:
 
   search:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/search:${VERSION}
+    container_name: bluespice-search
     restart: unless-stopped
-    depends_on:
-      - prepare
     volumes:
       - ${DATADIR}/search:/usr/share/opensearch/data
     healthcheck:
@@ -15,9 +14,8 @@ services:
       retries: 10
   database:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}
+    container_name: bluespice-database
     restart: unless-stopped
-    depends_on:
-      - prepare
     volumes:
       - ${DATADIR}/database/data:/config/databases
     environment:

@@ -2,6 +2,7 @@ services:
 
   proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/proxy:${VERSION}
+    container_name: bluespice-proxy
     restart: unless-stopped
     ports:
       - "443:443"

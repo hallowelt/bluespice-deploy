@@ -2,6 +2,7 @@ services:
 
   proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/proxy:${VERSION}
+    container_name: bluespice-kerberos-proxy
     restart: unless-stopped
     ports:
       - "443:443"

@@ -1,15 +1,19 @@
 services:
   cache:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
+    container_name: bluespice-cache
     restart: unless-stopped
   pdf:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
+    container_name: bluespice-pdf
     restart: unless-stopped
   
   formula:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
+    container_name: bluespice-formula
     restart: unless-stopped
 
   diagram:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
+    container_name: bluespice-diagram 
     restart: unless-stopped
