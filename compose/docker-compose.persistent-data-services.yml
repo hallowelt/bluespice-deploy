@@ -17,6 +17,7 @@ services:
     container_name: bluespice-database
     restart: unless-stopped
     volumes:
+      - ${DATADIR}/database/logs:/config/logs
       - ${DATADIR}/database/data:/config/databases
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
