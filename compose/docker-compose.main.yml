@@ -28,7 +28,7 @@ x-common-environment: &common-environment
 
 services:
   wiki-web:
-    image: ${BLUESPICE_WIKI_REPOSITORY}
+    image: ${BLUESPICE_WIKI_IMAGE}
     container_name: bluespice-wiki-web
     restart: unless-stopped
     environment:
@@ -39,7 +39,7 @@ services:
       - ${DATADIR}/wiki:/data
 
   wiki-task:
-    image: ${BLUESPICE_WIKI_REPOSITORY}
+    image: ${BLUESPICE_WIKI_IMAGE}
     container_name: bluespice-wiki-task
     restart: unless-stopped
     command: ["start-task --runAll"]
