@@ -59,16 +59,6 @@ systemctl start bluespice.service
 
 Persistent data will be stored in the `${DATADIR}` directory.
 
-# Known issues
-On the first start, the `bluespice/search` container (OpenSearch) will fail, due to file system permissions. This can be fixed by running the following command:
-
-```sh
-sudo chown -R 1000:1000 ${DATADIR}/search
-```
-Same goes for `bluespice/wiki` wich is now related to user 1002:1002
-```sh
-sudo chown -R 1002:1002 ${DATADIR}/wiki
-```
 The bluespice-prepare script cares for this in advance
 
 # Development
@@ -100,9 +90,9 @@ If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entr
 |------------------------------|----------------|------------------------------------------------------|----------|
 | `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
 | `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
+| `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
 | `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
 | `SERVICES_REPOSITORY_PATH`   | ``             | define custom Services-Repo (mostly for Testing)     | Yes      |
-| `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
 
 
 For more Variables please also check:
