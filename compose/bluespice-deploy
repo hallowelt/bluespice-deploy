@@ -16,9 +16,9 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 		fi
 	fi
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
-	REPO=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
+	WIKI_IMAGE=docker.bluespice.com/bluespice/wiki:${VERSION}
 else
-	REPO=bluespice/wiki:${VERSION}
+	WIKI_IMAGE=bluespice/wiki:${VERSION}
 fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
@@ -28,8 +28,21 @@ if [ "${KERBEROS}" == "true" ]; then
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
-	BLUESPICE_REPOSITORY=${REPO} \
+##allow custom services repo for testing
+if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
+	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}
+else
+	BLUESPICE_SERVICE_REPOSITORY='bluespice'
+fi
+##allow custom wiki image for testing
+if [ -n "${BLUESPICE_WIKI_IMAGE}" ]; then
+	WIKI_IMAGE=${BLUESPICE_WIKI_IMAGE}
+fi
+
+	BLUESPICE_WIKI_IMAGE=${WIKI_IMAGE}	\
+	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
 		docker compose \
+		-f docker-compose.helper-service.yml \
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \

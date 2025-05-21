@@ -11,6 +11,8 @@ x-common-environment: &common-environment
   WIKI_HOST: ${WIKI_HOST}
   WIKI_PORT: ${WIKI_PORT}
   WIKI_PROTOCOL: ${WIKI_PROTOCOL}
+  WIKI_BASE_PATH: ${WIKI_BASE_PATH:-\}
+
 
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
@@ -26,7 +28,9 @@ x-common-environment: &common-environment
 
 services:
   wiki-web:
-    image: ${BLUESPICE_REPOSITORY}
+    image: ${BLUESPICE_WIKI_IMAGE}
+    container_name: bluespice-wiki-web
+    restart: unless-stopped
     environment:
       <<: *common-environment
     command: start-web
@@ -35,7 +39,9 @@ services:
       - ${DATADIR}/wiki:/data
 
   wiki-task:
-    image: ${BLUESPICE_REPOSITORY}
+    image: ${BLUESPICE_WIKI_IMAGE}
+    container_name: bluespice-wiki-task
+    restart: unless-stopped
     command: ["start-task --runAll"]
     environment:
       <<: *common-environment
