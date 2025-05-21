@@ -3,6 +3,13 @@
 This repo contains deployment code for the BlueSpice Wiki application
 
 Please see the [official helpdesk entry](https://en.wiki.bluespice.com/wiki/Setup:Installation_Guide/Docker) for more details.
+
+For more Variables please also check:
+https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md
+## Development
+- Layout based on ["Multi-container Applications docker-compose, Targeting multiple environments"](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/multi-container-applications-docker-compose#targeting-multiple-environments)
+
+
 ## Automated Update
 To test the automatedupdate, please change Command in [docker.compose.helper-service.yml](https://github.com/hallowelt/bluespice-deploy/blob/c89de5f0a4185af5b9a34aa388b22038b762ebaa/compose/docker-compose.helper-service.yml#L42)
 Please see https://github.com/hallowelt/docker-bluespice-helper and 
@@ -21,6 +28,3 @@ If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entr
 | `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
 | `SERVICES_REPOSITORY_PATH`   | ``             | define custom Services-Repo (mostly for Testing)     | Yes      |
 
-
-For more Variables please also check:
-https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md

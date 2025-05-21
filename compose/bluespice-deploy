@@ -25,6 +25,8 @@ if [ "${LETSENCRYPT}" == "true" ]; then
 fi
 if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
+else
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
 ##allow custom services repo for testing
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
@@ -44,6 +46,5 @@ fi
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
-		-f docker-compose.proxy.yml \
 		${EXTENDED_TOOLS} \
 		$@
