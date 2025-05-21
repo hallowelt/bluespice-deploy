@@ -28,6 +28,9 @@ services:
     command: ["prepare-bluespice"]
   upgrade:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    depends_on:
+      database:
+        condition: service_healthy
     container_name: bluespice-upgrade
     volumes:
       - ${DATADIR}:/data
@@ -36,15 +39,25 @@ services:
       <<: *common-environment
 
     restart: no
-    command: ["/app/bin/upgrade-pipeline"]
+    command: ["sleep","1"]
+      ## Experimental Autoupgrade 
+      ## To run change command to :
+      #  command: ["/app/bin/upgrade-pipeline"]
 
 
   search:
     depends_on:
-      - prepare
+      prepare:
+        condition: service_completed_successfully
   database:
     depends_on:
-      - prepare
+      prepare:
+        condition: service_completed_successfully
   wiki-task:
     depends_on:
-      - upgrade
+      upgrade:
+        condition: service_completed_successfully
+  wiki-web:
+    depends_on:
+      upgrade:
+        condition: service_completed_successfully
