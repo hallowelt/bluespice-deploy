@@ -1,5 +1,26 @@
 #!/bin/bash
 
+for i in "$@"; do
+  case $i in
+    --profile=upgrade)
+      UPGRADE_ACTION="/app/bin/upgrade-pipeline"
+      ;;
+    --profile=upgrade-force)
+      UPGRADE_ACTION="/app/bin/upgrade-pipeline -f"
+      ;;
+    --profile=*)
+      echo "Unknown profile ${i#*=}"
+      exit 1
+      ;;
+    *)
+      DOCKER_ARGS+=("$i")
+      UPGRADE_ACTION="sleep 1"
+      ;;
+  esac
+done
+
+export UPGRADE_ACTION=${UPGRADE_ACTION}
+
 source .env
 EXTENDED_TOOLS=""
 
@@ -47,4 +68,4 @@ fi
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
 		${EXTENDED_TOOLS} \
-		$@
+		${DOCKER_ARGS[*]}

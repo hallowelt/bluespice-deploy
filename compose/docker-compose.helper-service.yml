@@ -39,11 +39,7 @@ services:
       <<: *common-environment
 
     restart: no
-    command: ["sleep","1"]
-      ## Experimental Autoupgrade 
-      ## To run change command to :
-      #  command: ["/app/bin/upgrade-pipeline"]
-
+    command: ${UPGRADE_ACTION}
 
   search:
     depends_on:

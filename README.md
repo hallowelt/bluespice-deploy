@@ -11,7 +11,7 @@ https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md
 
 
 ## Automated Update
-To test the automatedupdate, please change Command in [docker.compose.helper-service.yml](https://github.com/hallowelt/bluespice-deploy/blob/c89de5f0a4185af5b9a34aa388b22038b762ebaa/compose/docker-compose.helper-service.yml#L42)
+To run the automated update use `./bluespice-deploy up -d --profile=upgrade`
 Please see https://github.com/hallowelt/docker-bluespice-helper and 
 [official uppgrade Documention](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information. 
 
