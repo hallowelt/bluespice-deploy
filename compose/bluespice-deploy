@@ -49,6 +49,9 @@ if [ "${KERBEROS}" == "true" ]; then
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
+if [ "${EXPERIMENTAL}" == "true" ]; then
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.experimental.yml"
+fi
 ##allow custom services repo for testing
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
 	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}
@@ -68,4 +71,5 @@ fi
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
 		${EXTENDED_TOOLS} \
+		-f docker-compose.dev.yml \
 		${DOCKER_ARGS[*]}
