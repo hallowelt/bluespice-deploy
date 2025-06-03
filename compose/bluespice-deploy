@@ -23,9 +23,13 @@ export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
 source .env
 EXTENDED_TOOLS=""
 
-
 if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
-	if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
+	WIKI_IMAGE=docker.bluespice.com/bluespice/wiki:${VERSION}
+
+	if [[ $(docker images -q ${WIKI_IMAGE}) ]]; then
+		echo "Image ${WIKI_IMAGE} found locally."
+	else if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
 		echo "In order to access our ${EDITION}-Image please login to docker.bluespice.com"
 		docker login docker.bluespice.com
 		if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
@@ -35,8 +39,6 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 		exit
 		fi
 	fi
-	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
-	WIKI_IMAGE=docker.bluespice.com/bluespice/wiki:${VERSION}
 else
 	WIKI_IMAGE=bluespice/wiki:${VERSION}
 fi
