@@ -14,12 +14,11 @@ for i in "$@"; do
       ;;
     *)
       DOCKER_ARGS+=("$i")
-      UPGRADE_ACTION="sleep 1"
       ;;
   esac
 done
 
-export UPGRADE_ACTION=${UPGRADE_ACTION}
+export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
 
 source .env
 EXTENDED_TOOLS=""
