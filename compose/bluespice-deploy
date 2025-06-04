@@ -29,7 +29,7 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 
 	if [[ $(docker images -q ${WIKI_IMAGE}) ]]; then
 		echo "Image ${WIKI_IMAGE} found locally."
-	else if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
+	elif [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
 		echo "In order to access our ${EDITION}-Image please login to docker.bluespice.com"
 		docker login docker.bluespice.com
 		if [[ ! $(grep 'docker.bluespice.com' $HOME/.docker/config.json) ]]; then 
