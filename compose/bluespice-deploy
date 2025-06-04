@@ -25,7 +25,7 @@ EXTENDED_TOOLS=""
 
 if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
-	WIKI_IMAGE=docker.bluespice.com/bluespice/wiki:${VERSION}
+	WIKI_IMAGE=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
 
 	if [[ $(docker images -q ${WIKI_IMAGE}) ]]; then
 		echo "Image ${WIKI_IMAGE} found locally."
