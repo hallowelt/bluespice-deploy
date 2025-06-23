@@ -34,7 +34,7 @@ x-common-environment: &common-environment
 services:
   wiki-web:
     image: ${BLUESPICE_WIKI_IMAGE}
-    container_name: bluespice-wiki-web
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web
     restart: unless-stopped
     environment:
       <<: *common-environment
@@ -45,7 +45,7 @@ services:
 
   wiki-task:
     image: ${BLUESPICE_WIKI_IMAGE}
-    container_name: bluespice-wiki-task
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-task
     restart: unless-stopped
     command: ["start-task --runAll"]
     environment:
