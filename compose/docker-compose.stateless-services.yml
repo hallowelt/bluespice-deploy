@@ -1,13 +1,19 @@
 services:
-
   cache:
-    image: bluespice/cache:${VERSION}
-
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-cache
+    restart: unless-stopped
   pdf:
-    image: bluespice/pdf:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
+    restart: unless-stopped
   
   formula:
-    image: bluespice/formula:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-formula
+    restart: unless-stopped
 
   diagram:
-    image: bluespice/diagram:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-diagram
+    restart: unless-stopped

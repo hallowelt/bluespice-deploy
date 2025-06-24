@@ -1,24 +1,42 @@
 # BlueSpice "Deploy"
-<img style="display:block;margin:auto" src="https://bluespice.com/wp-content/uploads/2022/09/bluespice_logo.png" alt="BlueSpice MediaWiki" />
-This repo contains deployment code for the BlueSpice Wiki application
+<img style="display:block;margin:auto" src="https://bluespice.com/wp-content/uploads/2022/09/bluespice_logo.png" alt="BlueSpice MediaWiki logo" />
+Toolkit for containerized deployment of BlueSpice Wiki.
 
-Please see the [official helpdesk entry](https://en.wiki.bluespice.com/wiki/Setup:Installation_Guide/Docker) for more details.
+## Deployment
+Please follow the [installation guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Docker) in the BlueSpice Helpdesk.
 
-## Hint
+## Upgrade to BlueSpice 5
+For an existing BlueSpice 4.5.x installation using [an earlier stack](https://github.com/hallowelt/bluespice-deploy/tree/4.5.x) of `bluespice-deploy` docker containers, an automated upgrade is possible.
+In that case, `./bluespice-deploy up -d --profile=upgrade` should be used.
+Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information.
+
+<!--TODO: Upgrade for 4.4.x "all-in-one" container users-->
+
+## Configuration
+| Variable Name                | Default Value  | Description                                          | Optional |
+|------------------------------|----------------|------------------------------------------------------|----------|
+|`BLUESPICE_SERVICE_REPOSITORY`| `bluespice`    | pull Docker images from an alternative service repo  | Yes      |
+| `BLUESPICE_WIKI_IMAGE`       |edition-specific| use an alternative image for the wiki-containers     | Yes      |
+| `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
+| `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
+| `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
+
+For more variables to set in `compose/.env`, please also check [documentation](https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md) of the image behind the wiki-containers.
+
+If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entrypoint` GPC (=`$_REQUEST`) to a value matching the `MW_ENTRY_POINT` constant in context of the application to enable full debug log to `stdout` for any call to the specified entry point.
+
+## Run BlueSpice for Development
 - This layout is based on ["Multi-container Applications docker-compose, Targeting multiple environments"](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/multi-container-applications-docker-compose#targeting-multiple-environments)
 - The later-loaded docker compose commands will override those earlier-loaded ones. Please be aware of this feature, and make use of it sufficiently. 
-=======
-# Data volumes
 
-Persistent data will be stored in the `${DATADIR}` directory.
-
-# Development
-
-## Develop BlueSpice 4.5.x with self-built images
-Enter your chosen base path, e.g `/workspace/bs-4-5/`, clone this project. Under the same path you need to build the images.
-
+### Step 1: load this repo
+Enter your chosen base path, e.g `/workspace/bs/`, run
+```sh
+git clone https://github.com/hallowelt/bluespice-deploy.git -b dev
+```
+#### Optional: build your own image (content under construction, not applicable for now)
 First you need to handle the image for the web and task containers of the wiki, which is a bit special. 
-After running `git clone https://github.com/hallowelt/docker-bluespice-wiki.git -b dev-4.5.x`, you need to:
+After running `git clone https://github.com/hallowelt/docker-bluespice-wiki.git -b dev`, you need to:
 - run `mkdir -p docker-bluespice-wiki/_codebase/bluespice` to make a empty bluespice directory. For development usage, it would be more convenient to map the codebase from the host machine in to the containers. 
 - clone a published version SimpleSAMLPHP to `docker-bluespice-wiki/_codebase/simplesamlphp`, see `docker-bluespice-wiki/README.md`. 
 
@@ -32,7 +50,7 @@ git clone https://github.com/hallowelt/docker-bluespice-proxy.git -b main && doc
 git clone https://github.com/hallowelt/docker-bluespice-pdf.git -b main && docker build -t bluespice/pdf:4.5.x docker-bluespice-pdf
 git clone https://github.com/hallowelt/docker-bluespice-formula.git -b main && docker build -t bluespice/formula:4.5.x docker-bluespice-formula
 ```
-If you are running pro version (need access to https://gitlab.hallowelt.com), please also run
+If you are running pro or farm version (need access to https://gitlab.hallowelt.com), please also run
 ```sh
 git clone https://github.com/hallowelt/docker-bluespice-diagram.git -b main && docker build -t bluespice/diagram:4.5.x docker-bluespice-diagram
 git clone https://github.com/hallowelt/docker-bluespice-collabpads.git -b main && docker build -t bluespice/collabpads:4.5.x docker-bluespice-collabpads
@@ -42,37 +60,32 @@ After building all these images, you can proceed with the following steps.
 Building every image on you own can be a helpful practice, when you would like to precisely control the versions of images you use. 
 Of course one can also turn to remote images for developing instead (need to make sure that the names of images you use exist remotely).
 
-## Codebase
+### Step 2: prepare codebase
 Enter your chosen base path, then clone your wanted version and edition of BlueSpice. For example: 
-- BlueSpice Free edition, version 4.6.0-alpha: `git clone -b REL1_39 https://github.com/hallowelt/mediawiki.git code`
-- BlueSpice Free edition, version 4.5.3: `git clone -b 4.5.3 https://github.com/hallowelt/mediawiki.git code`
-- BlueSpice Pro edition, version 4.6.0-alpha: `git clone -b REL1_39 git@gitlab.hallowelt.com:BlueSpice/mediawiki.git code`
-- BlueSpice Farm edition, version 4.6.0-alpha: `git clone -b REL1_39 git@gitlab.hallowelt.com:BlueSpiceFarm/mediawiki.git code`
+- BlueSpice Free edition, version 5.2.0-alpha: `git clone -b REL1_43 https://github.com/hallowelt/mediawiki.git code`
+- BlueSpice Free edition, version 5.1.0: `git clone -b 5.1.0 https://github.com/hallowelt/mediawiki.git code`
+- BlueSpice Pro edition, version 5.2.0-alpha: `git clone -b REL1_43 git@gitlab.hallowelt.com:BlueSpice/mediawiki.git code`
+- BlueSpice Farm edition, version 5.2.0-alpha: `git clone -b REL1_43 git@gitlab.hallowelt.com:BlueSpiceFarm/mediawiki.git code`
 
 To clone codebase of Pro and Farm editions, you need access to https://gitlab.hallowelt.com .
 
 The codebase is not yet ready for running right after being cloned. To initialize the codebase, you need to use php and composer from your host machine:
 ```sh
-cd code && composer update --with-dependencies && composer clear-cache
+cd code && composer clear-cache && composer update --with-dependencies --prefer-source
 ```
 Alternatively, you can also use a built codebase (e.g unzip a published code package). 
 
-## Data storage
+### Step 3: configure environment
 Set up `bluespice-deploy-dev/compose/.env` in this project, taking reference of `.env.sample`. 
 Please make sure that you fill in correct (absolute) path names of your code and data directories. 
 
-With `.env`, you can run initialze script for the data storage:
-```sh
-cd bluespice-deploy-dev/compose
-sudo ./bluespice-prepare
-```
 Before running the containers, you still need to configure hostname and its certificate:
-### Hostname
+#### Hostname
 Assume that you would like to use `mydev.localhost` as your hostname. Add the following line to `/etc/hosts`:
 ```sh
 127.0.0.1 mydev.localhost
 ```
-### SSL Certificates
+#### SSL Certificates
 Inside the `${DATADIR}/proxy/certs` directory, run the following command to generate a self-signed certificate for `mydev.localhost`:
 ```sh
 sudo openssl req -x509 -newkey rsa:4096 -keyout mydev.localhost.key -out mydev.localhost.crt -sha256 -days 3650 -nodes -subj "/C=XX/ST=StateName/L=CityName/O=CompanyName/OU=CompanySectionName/CN=CommonNameOrHostname"
@@ -80,7 +93,7 @@ sudo openssl req -x509 -newkey rsa:4096 -keyout mydev.localhost.key -out mydev.l
 sudo chown 1000:1000 mydev.localhost.*
 ```
 
-## Run the containers
+### Step 4: run the containers
 At the first run please use `./bluespice-deploy pull`, so that the Docker engine uses your locally built images (rather than pulling from remote registries).
 
 When you are sure that no conflicting containers are listed in `docker ps`, you can run the start-up command:
@@ -144,4 +157,3 @@ For example, you can add `xdebug_info();` to your `index.php` to output an infor
 On MacOS with Docker Desktop, mapping of directories from host machine into containers does not work, even if the permissions are correctly set. 
 ### Adjusting `php.ini` settings
 You change `php.ini` settings by rebuilding the main image in `docker-bluespice-wiki`. For example, the wiki image uses `date.timezone=Europe/Berlin` by default, but if you write `date.timezone=UTC` in `99-dev.ini`, that will be the final rule that applies. Containers will of course need to be restarted to apply the changes. 
-

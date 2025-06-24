@@ -1,7 +1,13 @@
 services: 
 
   collabpads:
-    image: bluespice/collabpads:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/collabpads:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-collabpads
+    restart: unless-stopped
+    depends_on:
+      collabpads-database:
+        condition: service_healthy
+        restart: true
     environment:
       COLLABPADS_BACKEND_WIKI_BASEURL: http://wiki-web:9090
       COLLABPADS_BACKEND_MONGO_DB_HOST: collabpads-database
@@ -13,7 +19,15 @@ services:
       VIRTUAL_PORT: 8081
 
   collabpads-database:
-    image: mongo:5.0-focal
+    image: mongo:8.0
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-collabpads-database
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      start_period: 5s
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
       - ${DATADIR}/database-collabpads:/data/db
 

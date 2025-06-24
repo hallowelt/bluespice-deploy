@@ -2,6 +2,8 @@ services:
 
   letsencrypt:
     image: nginxproxy/acme-companion
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-letsencrypt-service
+    restart: unless-stopped
     environment:
       - DEFAULT_EMAIL=${ADMIN_MAIL}
       - NGINX_PROXY_CONTAINER=proxy

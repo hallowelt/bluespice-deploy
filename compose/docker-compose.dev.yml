@@ -3,7 +3,6 @@ version: "3.7"
 services:
 
   wiki-web:
-    image: bs-wiki-dev:${VERSION}
     pull_policy: missing
     volumes:
       - ${CODEDIR}:/app/bluespice/w
@@ -16,7 +15,6 @@ services:
       #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
 
   wiki-task:
-    image: bs-wiki-dev:${VERSION}
     pull_policy: missing
     volumes:
       - ${CODEDIR}:/app/bluespice/w
@@ -29,30 +27,14 @@ services:
       #DEV_WIKI_DEBUG_LOGCHANNELS: ${DEV_WIKI_DEBUG_LOGCHANNELS}
 
   database:
-    image: linuxserver/mariadb:11.4.4
-    #image: mariadb:10.5
     pull_policy: missing
-    volumes:
-      - ${DATADIR}/database/data:/config/databases
-      - ${DATADIR}/database/logs:/config/log
-    #user: "999:999"
-    ports:
-      - "3306:3306"
+    #ports:
+    #  - "3306:3306"
     environment:
-      - PUID=999
-      - PGID=999
       - TZ=Europe/Berlin
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
+      #- PUID=999
+      #- PGID=999
       #- REMOTE_SQL=http://database
-    healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
-      start_period: 5s
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
   collabpads:
     pull_policy: missing
@@ -79,9 +61,9 @@ services:
 
   dev-mailhog:
     image: mailhog/mailhog:latest
-    container_name: dev-mailhog
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-mailhog
     ports:
-      - "8025:8025"
+      - "18025:8025"
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PORT: 8025
@@ -90,7 +72,7 @@ services:
 
   dev-dbadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: dev-dbadmin
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-dbadmin
     environment:
       PMA_HOST: ${DB_HOST}
       PMA_USER: ${DB_USER}
@@ -102,7 +84,7 @@ services:
 
   dev-searchdashboards:
     image: opensearchproject/opensearch-dashboards:2.11.1
-    container_name: dev-searchdashboards
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-searchdashboards
     environment:
       # https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/config/opensearch_dashboards.yml
       SERVER_BASEPATH: /_searchdashboards
@@ -115,7 +97,7 @@ services:
 
   dev-mongodbadmin:
     image: mongo-express
-    container_name: dev-mongodbadmin
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-mongodbadmin
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://collabpads-database:27017/
       ME_CONFIG_BASICAUTH_USERNAME: ""
@@ -125,23 +107,24 @@ services:
       VIRTUAL_PORT: 8081
       VIRTUAL_PATH: /_mongodbadmin/
 
-  dev-s3:
-    image: minio/minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - ${DATADIR}/s3:/data
-    environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: HalloWelt11
-    command: server /data --console-address ":9001"
-    profiles:
-      - s3
+  #dev-s3:
+  #  image: minio/minio
+  #  container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-s3
+  #  ports:
+  #    - "9000:9000"
+  #    - "9001:9001"
+  #  volumes:
+  #    - ${DATADIR}/s3:/data
+  #  environment:
+  #    MINIO_ROOT_USER: admin
+  #    MINIO_ROOT_PASSWORD: HalloWelt11
+  #  command: server /data --console-address ":9001"
+  #  profiles:
+  #    - s3
 
   dev-keycloak:
     image: quay.io/keycloak/keycloak:latest
-    container_name: dev-keycloak
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-keycloak
     command:
       - start-dev
       - --proxy-headers=xforwarded
@@ -168,7 +151,7 @@ services:
 
   dev-ldap:
     image: osixia/openldap:1.5.0
-    container_name: dev-ldap
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-ldap
     environment:
       LDAP_ORGANISATION: "ACME Corporation"
       LDAP_DOMAIN: "acme.local"
@@ -180,7 +163,7 @@ services:
 
   dev-ldapadmin:
     image: osixia/phpldapadmin:latest
-    container_name: dev-ldapadmin
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-dev-ldapadmin
     environment:
       PHPLDAPADMIN_LDAP_HOSTS: dev-ldap
       PHPLDAPADMIN_HTTPS: "false"
