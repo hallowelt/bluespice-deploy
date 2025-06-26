@@ -80,17 +80,33 @@ Set up `bluespice-deploy-dev/compose/.env` in this project, taking reference of 
 Please make sure that you fill in correct (absolute) path names of your code and data directories. 
 
 Before running the containers, you still need to configure hostname and its certificate:
-#### Hostname
+#### Hostname and SSL Certificates
 Assume that you would like to use `mydev.localhost` as your hostname. Add the following line to `/etc/hosts`:
 ```sh
 127.0.0.1 mydev.localhost
 ```
-#### SSL Certificates
 Inside the `${DATADIR}/proxy/certs` directory, run the following command to generate a self-signed certificate for `mydev.localhost`:
 ```sh
 sudo openssl req -x509 -newkey rsa:4096 -keyout mydev.localhost.key -out mydev.localhost.crt -sha256 -days 3650 -nodes -subj "/C=XX/ST=StateName/L=CityName/O=CompanyName/OU=CompanySectionName/CN=CommonNameOrHostname"
-
-sudo chown 1000:1000 mydev.localhost.*
+```
+#### Ownership of files and directories
+If your host machine is based on Linux, the `prepare` container will handle almost everything for you.
+You only need to run
+```sh
+sudo chown 1000:1000 ${DATADIR}/proxy/certs/mydev.localhost.*
+```
+If your host machine is based on MacOS, please first make sure that the user group `docker` with id `999` exists, and that your current user is in that group.
+You might want to run `cat /etc/group | grep docker` and `id` to check.
+If missing, you can run the following lines to fix:
+```sh
+sudo dscl . -create /Groups/docker
+sudo dscl . -create /Groups/docker PrimaryGroupID 999
+sudo dscl . -create /Groups/docker RealName "Docker group"
+sudo dscl . -append /Groups/docker GroupMembership <your-user>
+```
+After all these you can change the ownership of the whole data directory recursively:
+```sh
+sudo chown -R <your-user>:docker ${DATADIR}
 ```
 
 ### Step 4: run the containers
