@@ -1,30 +1,29 @@
 # BlueSpice "Deploy"
-<img style="display:block;margin:auto" src="https://bluespice.com/wp-content/uploads/2022/09/bluespice_logo.png" alt="BlueSpice MediaWiki" />
-This repo contains deployment code for the BlueSpice Wiki application
+<img style="display:block;margin:auto" src="https://bluespice.com/wp-content/uploads/2022/09/bluespice_logo.png" alt="BlueSpice MediaWiki logo" />
+Toolkit for containerized deployment of BlueSpice Wiki.
 
-Please see the [official helpdesk entry](https://en.wiki.bluespice.com/wiki/Setup:Installation_Guide/Docker) for more details.
+## Deployment
+Please follow the [installation guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Docker) in the BlueSpice Helpdesk.
 
-For more Variables please also check:
-https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md
-## Development
-- Layout based on ["Multi-container Applications docker-compose, Targeting multiple environments"](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/multi-container-applications-docker-compose#targeting-multiple-environments)
+## Upgrade to BlueSpice 5
+For an existing BlueSpice 4.5.x installation using [an earlier stack](https://github.com/hallowelt/bluespice-deploy/tree/4.5.x) of `bluespice-deploy` docker containers, an automated upgrade is possible.
+In that case, `./bluespice-deploy up -d --profile=upgrade` should be used.
+Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information.
 
+<!--TODO: Upgrade for 4.4.x "all-in-one" container users-->
 
-## Automated Update
-To run the automated update use `./bluespice-deploy up -d --profile=upgrade`
-Please see https://github.com/hallowelt/docker-bluespice-helper and 
-[official uppgrade Documention](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information. 
+## Configuration
+| Variable Name                | Default Value  | Description                                          | Optional |
+|------------------------------|----------------|------------------------------------------------------|----------|
+|`BLUESPICE_SERVICE_REPOSITORY`| `bluespice`    | pull Docker images from an alternative service repo  | Yes      |
+| `BLUESPICE_WIKI_IMAGE`       |edition-specific| use an alternative image for the wiki-containers     | Yes      |
+| `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
+| `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
+| `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
 
-## Debugging
+For more variables to set in `compose/.env`, please also check [documentation](https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md) of the image behind the wiki-containers.
+
 If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entrypoint` GPC (=`$_REQUEST`) to a value matching the `MW_ENTRY_POINT` constant in context of the application to enable full debug log to `stdout` for any call to the specified entry point.
 
-## ENV vars
-
-| Variable                     | Default Value  | Description                                          | Optional |
-|------------------------------|----------------|------------------------------------------------------|----------|
-| `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
-| `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
-| `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
-| `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
-| `SERVICES_REPOSITORY_PATH`   | ``             | define custom Services-Repo (mostly for Testing)     | Yes      |
-
+## Development
+Please check the [`dev` branch](https://github.com/hallowelt/bluespice-deploy/tree/dev) of this repo.
