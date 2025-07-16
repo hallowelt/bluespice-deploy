@@ -28,6 +28,9 @@ x-common-environment: &common-environment
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
+  AV_HOST: ${AV_HOST}
+  AV_PORT: ${AV_PORT}
+
 services:
   wiki-web:
     image: ${BLUESPICE_WIKI_IMAGE}
