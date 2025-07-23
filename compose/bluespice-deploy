@@ -54,6 +54,9 @@ fi
 if [ -n "${AV_HOST}" ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
 fi
+if [ -f docker-compose.override.yml ]; then
+       EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
+fi
 
 ##allow custom services repo for testing
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
@@ -73,6 +76,5 @@ fi
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
-		-f docker-compose.override.yml \
 		${EXTENDED_TOOLS} \
 		${DOCKER_ARGS[*]}
