@@ -73,5 +73,6 @@ fi
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
+		-f docker-compose.override.yml \
 		${EXTENDED_TOOLS} \
 		${DOCKER_ARGS[*]}
