@@ -1,1 +1,2 @@
-_data/
+_*/**
+compose/docker-compose.override.yml
