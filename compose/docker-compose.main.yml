@@ -39,6 +39,7 @@ services:
 
     volumes:
       - ${DATADIR}/wiki:/data
+      - /etc/timezone:/etc/timezone:ro
 
   wiki-task:
     image: ${BLUESPICE_WIKI_IMAGE}
@@ -50,3 +51,4 @@ services:
       BACKUP_HOUR: ${BACKUP_HOUR}
     volumes:
       - ${DATADIR}/wiki:/data
+      - /etc/timezone:/etc/timezone:ro
