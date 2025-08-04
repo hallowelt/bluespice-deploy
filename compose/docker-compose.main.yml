@@ -3,6 +3,7 @@ name: bluespice
 x-common-environment: &common-environment
   VERSION: ${VERSION}
   EDITION: ${EDITION}
+  TZ: ${TZ:-UTC}
 
   WIKI_NAME: ${WIKI_NAME}
   WIKI_LANG: ${WIKI_LANG}
