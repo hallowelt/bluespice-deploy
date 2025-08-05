@@ -27,4 +27,4 @@ If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entr
 | `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
 | `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
 | `SERVICES_REPOSITORY_PATH`   | ``             | define custom Services-Repo (mostly for Testing)     | Yes      |
-
+| `TZ`                         | `UTC`          | Timezone for BlueSpice and container system time     | Yes      |

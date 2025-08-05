@@ -20,7 +20,10 @@ done
 
 export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
 
+export TZ=$(readlink /etc/localtime 2>/dev/null | sed 's|.*/zoneinfo/||')
+
 source .env
+
 EXTENDED_TOOLS=""
 
 if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
