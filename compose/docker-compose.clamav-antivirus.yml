@@ -4,6 +4,8 @@ services:
     image: clamav/clamav:stable
     container_name: bluespice-antivirus-service
     restart: unless-stopped
+    volumes:
+      - ${DATADIR}/antivirus:/var/lib/clamav
     healthcheck:
       test: ["CMD-SHELL", "echo 'PING' | nc -w 5 localhost 3310"]
       interval: 30s
