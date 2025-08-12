@@ -4,10 +4,18 @@ services:
     image: clamav/clamav:stable
     container_name: bluespice-antivirus-service
     restart: unless-stopped
-    volumes:
-      - ${DATADIR}/antivirus:/var/lib/clamav
     healthcheck:
       test: ["CMD-SHELL", "echo 'PING' | nc -w 5 localhost 3310"]
       interval: 30s
       timeout: 10s
       retries: 5
+
+  wiki-web:
+    environment:
+      AV_HOST: ${AV_HOST:-antivirus}
+      AV_PORT: ${AV_PORT:-3310}
+
+  wiki-task:
+    environment:
+      AV_HOST: ${AV_HOST:-antivirus}
+      AV_PORT: ${AV_PORT:-3310}

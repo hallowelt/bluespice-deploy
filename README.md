@@ -23,6 +23,7 @@ If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entr
 | Variable                     | Default Value  | Description                                          | Optional |
 |------------------------------|----------------|------------------------------------------------------|----------|
 | `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
+| `ANTIVIRUS`                  | `false`        | enables ClamAV antivirus service                     | Yes      |
 | `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
 | `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
 | `BLUESPICE_WIKI_IMAGE`       | ``             | define custom imagepath for wiki-containers          | Yes      |
