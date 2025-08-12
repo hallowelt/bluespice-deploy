@@ -45,6 +45,9 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 else
 	WIKI_IMAGE=bluespice/wiki:${VERSION}
 fi
+if [ "${ANTIVIRUS}" == "true" ]; then
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
+fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
 fi
