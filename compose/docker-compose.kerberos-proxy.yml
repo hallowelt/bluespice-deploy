@@ -17,7 +17,7 @@ services:
   
 
   kerberos-proxy:
-    images: ${BLUESPICE_SERVICE_REPOSITORY}/kerberos-proxy:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/kerberos-proxy:${VERSION}
     container_name: bluespice-kerberos-proxy
     volumes:
       - ${DATADIR}/kerberos/krb5.conf:/etc/krb5.conf
