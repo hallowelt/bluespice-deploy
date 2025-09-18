@@ -20,7 +20,10 @@ done
 
 export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
 
+export TZ=$(readlink /etc/localtime 2>/dev/null | sed 's|.*/zoneinfo/||')
+
 source .env
+
 EXTENDED_TOOLS=""
 
 if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
@@ -42,6 +45,9 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 else
 	WIKI_IMAGE=bluespice/wiki:${VERSION}
 fi
+if [ "${ANTIVIRUS}" == "true" ]; then
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
+fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
 fi
@@ -51,13 +57,9 @@ else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
 
-if [ -n "${AV_HOST}" ]; then
-       EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
-fi
 if [ -f docker-compose.override.yml ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
 fi
-
 ##allow custom services repo for testing
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
 	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}

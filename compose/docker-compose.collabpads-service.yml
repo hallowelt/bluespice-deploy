@@ -15,7 +15,7 @@ services:
       COLLABPADS_BACKEND_LOG_LEVEL: info
       COLLABPADS_BACKEND_PORT: 8081
       VIRTUAL_HOST: ${WIKI_HOST}
-      VIRTUAL_PATH: /_collabpads/
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_collabpads/
       VIRTUAL_PORT: 8081
 
   collabpads-database:

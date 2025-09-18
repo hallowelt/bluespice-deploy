@@ -3,6 +3,7 @@ name: bluespice
 x-common-environment: &common-environment
   VERSION: ${VERSION}
   EDITION: ${EDITION}
+  TZ: ${TZ:-UTC}
 
   WIKI_NAME: ${WIKI_NAME}
   WIKI_LANG: ${WIKI_LANG}
@@ -27,9 +28,6 @@ x-common-environment: &common-environment
   SMTP_USER: ${SMTP_USER}
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
-
-  AV_HOST: ${AV_HOST}
-  AV_PORT: ${AV_PORT}
 
 services:
   wiki-web:
