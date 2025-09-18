@@ -56,6 +56,10 @@ if [ "${KERBEROS}" == "true" ]; then
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
+
+if [ -f docker-compose.override.yml ]; then
+       EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
+fi
 ##allow custom services repo for testing
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
 	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}
