@@ -1,0 +1,55 @@
+services:
+
+  ai:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-ai
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/ai:${VERSION}
+    depends_on:
+      - ai-database
+    environment:
+      LOGGING__LEVEL: ${LOG_LEVEL}
+
+      SECURITY__STATIC_API_TOKEN: 
+
+      DATABASE__USER: ${DB_USER}
+      DATABASE__PASSWORD: ${DB_PASS}
+      DATABASE__HOST: ${DB_HOST}
+      DATABASE__NAME: ${DB_NAME}
+
+      NEO4J__USERNAME: ${AI_DB_USER:-}
+      NEO4J__PASSWORD: ${AI_DB_PASS:-}
+      NEO4J__URL: neo4j://${COMPOSE_PROJECT_NAME:-bluespice}-ai-database:7687
+      NEO4J__DATABASE: ${AI_DB_NAME:-}
+
+      AZURE__REGION: ${AZURE_REGION:-westeurope}
+      AZURE__OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE__OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE__LLM__MODEL_NAME: ${AZURE_LLM_MODEL_NAME:-gpt-4o}
+      AZURE__LLM__API_VERSION: ${AZURE_LLM_API_VERSION:-2025-03-01-preview}
+      AZURE__EMBEDDING__MODEL_NAME: ${AZURE_EMBEDDING_MODEL_NAME:-text-embedding-3-small}
+      AZURE__EMBEDDING__MODEL_VERSION: ${AZURE_EMBEDDING_MODEL_VERSION:-1}
+
+      IONOS__API_KEY: ${IONOS_API_KEY:-}
+      IONOS__INSTANCE_ID: ${IONOS_INSTANCE_ID:-}
+      IONOS__BASE_URL: ${IONOS_BASE_URL:-https://openai.inference.de-txl.ionos.com}
+
+    volumes:
+      - ${DATADIR}/bluespice/cache/rag:/watch
+    restart: unless-stopped
+
+  ai-database:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-ai-database
+    # TODO: Make `bluespice/graph-database` image with preset config
+    image: neo4j:5
+    environment:
+      NEO4J_AUTH: ${AI_DB_USER:-}/${AI_DB_PASS:-}
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_enabled: "true"
+      NEO4J_apoc_import_file_use__neo4j__config: "true"
+      NEO4J_PLUGINS: '["apoc"]'
+    volumes:
+      - ${DATA_DIR}/ai-data:/data
+
+  chat:
+    environment:
+      AI_CHAT_SERVICE_URL: http://${COMPOSE_PROJECT_NAME:-bluespice}-ai:8000
+      AI_CHAT_SERVICE_API_KEY:
