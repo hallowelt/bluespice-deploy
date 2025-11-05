@@ -26,6 +26,9 @@ services:
       - ${DATADIR}:/data
     restart: no
     command: ["prepare-bluespice"]
+    environment:
+      <<: *common-environment
+    
   upgrade:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
     depends_on:
