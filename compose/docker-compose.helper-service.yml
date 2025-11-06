@@ -21,17 +21,20 @@ x-common-environment: &common-environment
 services:  
   prepare:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
-    container_name: bluespice-prepare
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-prepare
     volumes:
       - ${DATADIR}:/data
     restart: no
     command: ["prepare-bluespice"]
+    environment:
+      <<: *common-environment
+    
   upgrade:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
     depends_on:
       database:
         condition: service_healthy
-    container_name: bluespice-upgrade
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-upgrade
     volumes:
       - ${DATADIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock

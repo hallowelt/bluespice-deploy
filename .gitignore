@@ -1,1 +1,4 @@
-_data/
+/*
+!/compose
+/compose/docker-compose.override.yml
+/compose/.env
