@@ -2,7 +2,7 @@ services:
 
   antivirus:
     image: clamav/clamav:stable
-    container_name: bluespice-antivirus-service
+    container_name:  ${COMPOSE_PROJECT_NAME:-bluespice}-antivirus-service
     restart: unless-stopped
     volumes:
       - ${DATADIR}/antivirus:/var/lib/clamav
