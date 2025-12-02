@@ -15,7 +15,7 @@ services:
       AI__MYSQL__HOST: ${DB_HOST}
       AI__MYSQL__DB_NAME: ${DB_NAME}
 
-      AI__NEO4J__USERNAME: ${AI_DB_USER:-}
+      AI__NEO4J__USERNAME: neo4j
       AI__NEO4J__PASSWORD: ${AI_DB_PASS:-}
       AI__NEO4J__URL: neo4j://${COMPOSE_PROJECT_NAME:-bluespice}-ai-database:7687
       AI__NEO4J__DATABASE: ${AI_DB_NAME:-}
@@ -35,7 +35,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-ai-database
     image: neo4j:5
     environment:
-      NEO4J_AUTH: ${AI_DB_USER:-}/${AI_DB_PASS:-}
+      NEO4J_AUTH: neo4j/${AI_DB_PASS:-}
     volumes:
       - ${DATADIR}/ai-data:/data
 
