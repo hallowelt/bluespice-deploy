@@ -2,10 +2,10 @@ services:
 
   search:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/search:${VERSION}
-    container_name: bluespice-search
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-search
     restart: unless-stopped
     volumes:
-      - ${DATADIR}/search:/usr/share/opensearch/data
+      - ${DATADIR}/search/data:/usr/share/opensearch/data
     healthcheck:
       test: curl -f http://localhost:9200
       start_period: 5s
@@ -14,7 +14,7 @@ services:
       retries: 10
   database:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}
-    container_name: bluespice-database
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-database
     restart: unless-stopped
     volumes:
       - ${DATADIR}/database/logs:/config/log/mysql

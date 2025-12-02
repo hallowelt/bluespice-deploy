@@ -1,19 +1,29 @@
 services:
   cache:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
-    container_name: bluespice-cache
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-cache
     restart: unless-stopped
   pdf:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
-    container_name: bluespice-pdf
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
     restart: unless-stopped
   
   formula:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
-    container_name: bluespice-formula
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-formula
     restart: unless-stopped
 
   diagram:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
-    container_name: bluespice-diagram 
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-diagram
+    restart: unless-stopped
+
+  wire:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/wire:${VERSION}
+    environment:
+      # must match settin in `p*-init-settings.php of `bluespice/wiki` container
+      WIRE_API_KEY: #TBD
+      WIRE_WIKI_BASE_PATH: http://${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web:9090
+      WIRE_TOKEN_SALT: #TBD
     restart: unless-stopped
