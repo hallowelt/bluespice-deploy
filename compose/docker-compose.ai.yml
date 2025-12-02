@@ -37,7 +37,7 @@ services:
     environment:
       NEO4J_AUTH: ${AI_DB_USER:-}/${AI_DB_PASS:-}
     volumes:
-      - ${DATA_DIR}/ai-data:/data
+      - ${DATADIR}/ai-data:/data
 
   chat:
     environment:
