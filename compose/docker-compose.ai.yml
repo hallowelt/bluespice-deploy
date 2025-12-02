@@ -28,7 +28,7 @@ services:
       AI__IONOS__BASE_URL: ${IONOS_BASE_URL:-https://openai.inference.de-txl.ionos.com}
 
     volumes:
-      - ${DATADIR}/bluespice/cache/rag:/watch
+      - ${DATADIR}/bluespice/rag:/watch
     restart: unless-stopped
 
   ai-database:
