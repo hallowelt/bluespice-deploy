@@ -81,6 +81,7 @@ fi
 	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
 		docker compose \
 		-f docker-compose.helper-service.yml \
+		-f docker-compose.secrets.yml \
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \

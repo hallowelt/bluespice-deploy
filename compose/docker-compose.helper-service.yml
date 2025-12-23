@@ -18,7 +18,7 @@ x-common-environment: &common-environment
 
   SMTP_HOST: ${SMTP_HOST}
 
-services:  
+services:
   prepare:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-prepare
