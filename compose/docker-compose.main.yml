@@ -35,7 +35,7 @@ services:
     restart: no
     environment:
       <<: *common-environment
-    command: run-installation
+    command: start-installer
     volumes:
       - ${DATADIR}/wiki:/data
 
