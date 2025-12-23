@@ -29,6 +29,16 @@ x-common-environment: &common-environment
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
 services:
+  wiki-installer:
+    image: ${BLUESPICE_WIKI_IMAGE}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-installer
+    restart: no
+    environment:
+      <<: *common-environment
+    command: run-installation
+    volumes:
+      - ${DATADIR}/wiki:/data
+
   wiki-web:
     image: ${BLUESPICE_WIKI_IMAGE}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web
@@ -38,6 +48,9 @@ services:
     command: start-web
     volumes:
       - ${DATADIR}/wiki:/data
+    depends_on:
+      wiki-installer:
+        condition: service_completed_successfully
 
   wiki-task:
     image: ${BLUESPICE_WIKI_IMAGE}
@@ -49,3 +62,6 @@ services:
       BACKUP_HOUR: ${BACKUP_HOUR}
     volumes:
       - ${DATADIR}/wiki:/data
+    depends_on:
+      wiki-installer:
+        condition: service_completed_successfully
