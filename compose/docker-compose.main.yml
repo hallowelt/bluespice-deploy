@@ -28,6 +28,12 @@ x-common-environment: &common-environment
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
+x-common-secrets: &common-secrets
+  - INTERNAL_SIMPLESAMLPHP_ADMIN_PASS
+  - INTERNAL_SIMPLESAMLPHP_SECRET_SALT
+  - INTERNAL_WIKI_SECRETKEY
+  - INTERNAL_WIKI_UPGRADEKEY
+
 services:
   wiki-installer:
     image: ${BLUESPICE_WIKI_IMAGE}
@@ -48,6 +54,7 @@ services:
     command: start-web
     volumes:
       - ${DATADIR}/wiki:/data
+    secrets: *common-secrets
     depends_on:
       wiki-installer:
         condition: service_completed_successfully
@@ -62,6 +69,7 @@ services:
       BACKUP_HOUR: ${BACKUP_HOUR}
     volumes:
       - ${DATADIR}/wiki:/data
+    secrets: *common-secrets
     depends_on:
       wiki-installer:
         condition: service_completed_successfully
