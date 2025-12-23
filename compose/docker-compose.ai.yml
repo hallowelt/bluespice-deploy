@@ -7,26 +7,21 @@ services:
       - ai-database
     environment:
       AI_LOGGING__LEVEL: ${LOG_LEVEL}
-
-      AI__SECURITY__STATIC_API_TOKEN: 
-
       AI__MYSQL__USER: ${DB_USER}
       AI__MYSQL__PASSWORD: ${DB_PASS}
       AI__MYSQL__HOST: ${DB_HOST}
       AI__MYSQL__DB_NAME: ${DB_NAME}
-
       AI__NEO4J__USERNAME: neo4j
       AI__NEO4J__PASSWORD: ${AI_DB_PASS}
       AI__NEO4J__URL: neo4j://${COMPOSE_PROJECT_NAME:-bluespice}-ai-database:7687
       AI__NEO4J__DATABASE: ${AI_DB_NAME:-bluespice}
-
       AI__AZURE__REGION: ${AZURE_REGION:-westeurope}
       AI__AZURE__OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
       AI__AZURE__OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
-
       AI__IONOS__API_KEY: ${IONOS_API_KEY:-}
       AI__IONOS__BASE_URL: ${IONOS_BASE_URL:-https://openai.inference.de-txl.ionos.com}
-
+    secrets:
+      - AI__SECURITY__STATIC_API_TOKEN
     volumes:
       - ${DATADIR}/wiki/bluespice/rag:/watch
     restart: unless-stopped
@@ -42,4 +37,5 @@ services:
   chat:
     environment:
       CHAT_AI_CHAT_SERVICE_URL: http://${COMPOSE_PROJECT_NAME:-bluespice}-ai:8000
-      CHAT_AI_CHAT_SERVICE_API_KEY:
+    secrets:
+      - CHAT_AI_CHAT_SERVICE_API_KEY

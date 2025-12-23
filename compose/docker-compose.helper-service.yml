@@ -28,7 +28,7 @@ services:
     command: ["prepare-bluespice"]
     environment:
       <<: *common-environment
-    
+
   upgrade:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
     depends_on:
@@ -48,14 +48,17 @@ services:
     depends_on:
       prepare:
         condition: service_completed_successfully
+
   database:
     depends_on:
       prepare:
         condition: service_completed_successfully
+
   wiki-task:
     depends_on:
       upgrade:
         condition: service_completed_successfully
+
   wiki-web:
     depends_on:
       upgrade:

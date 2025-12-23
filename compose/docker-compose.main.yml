@@ -14,7 +14,6 @@ x-common-environment: &common-environment
   WIKI_PROTOCOL: ${WIKI_PROTOCOL}
   WIKI_BASE_PATH: ${WIKI_BASE_PATH:-/}
 
-
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_ROOT_USER: ${DB_ROOT_USER}
@@ -37,7 +36,6 @@ services:
     environment:
       <<: *common-environment
     command: start-web
-
     volumes:
       - ${DATADIR}/wiki:/data
 

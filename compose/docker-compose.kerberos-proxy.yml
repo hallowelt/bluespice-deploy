@@ -14,7 +14,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     labels:
       - com.github.nginx-proxy.nginx=true
-  
 
   kerberos-proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/kerberos-proxy:${VERSION}
@@ -23,7 +22,6 @@ services:
     volumes:
       - ${DATADIR}/kerberos/krb5.conf:/etc/krb5.conf
       - ${DATADIR}/kerberos/kerberos.keytab:/etc/kerberos.keytab
-
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
 

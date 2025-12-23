@@ -22,8 +22,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
     image: ${BLUESPICE_SERVICE_REPOSITORY}/wire:${VERSION}
     environment:
-      # must match settin in `p*-init-settings.php of `bluespice/wiki` container
-      WIRE_API_KEY: #TBD
       WIRE_WIKI_BASE_PATH: http://${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web:9090
-      WIRE_TOKEN_SALT: #TBD
+    secrets:
+      - WIRE_API_KEY
+      - WIRE_TOKEN_SALT
     restart: unless-stopped
