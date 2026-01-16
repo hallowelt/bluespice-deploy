@@ -13,7 +13,7 @@ services:
       AI__MYSQL__DB_NAME: ${DB_NAME}
       AI__NEO4J__USERNAME: neo4j
       AI__NEO4J__PASSWORD: ${AI_DB_PASS}
-      AI__NEO4J__URL: neo4j://${COMPOSE_PROJECT_NAME:-bluespice}-ai-database:7687
+      AI__NEO4J__URL: neo4j://ai-database:7687
       AI__NEO4J__DATABASE: ${AI_DB_NAME:-bluespice}
       AI__AZURE__REGION: ${AZURE_REGION:-westeurope}
       AI__AZURE__OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
@@ -36,6 +36,6 @@ services:
 
   chat:
     environment:
-      CHAT_AI_CHAT_SERVICE_URL: http://${COMPOSE_PROJECT_NAME:-bluespice}-ai:8000
+      CHAT_AI_CHAT_SERVICE_URL: http://ai:8000
     secrets:
       - CHAT_AI_CHAT_SERVICE_API_KEY

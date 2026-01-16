@@ -4,7 +4,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-chat
     image: ${BLUESPICE_SERVICE_REPOSITORY}/chat:${VERSION}
     environment:
-      CHAT_WIKI_BASE_URL: http://${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web:9090 #Avoid SSL connection
+      CHAT_WIKI_BASE_URL: http://wiki-web:9090
       CHAT_WIKI_ARTICLE_ENDPOINT: ${WIKI_PROTOCOL}://${WIKI_HOST}${WIKI_BASE_PATH:-/}wiki
       CHAT_SLACK_APP_TOKEN: ${SLACK_APP_TOKEN:-}
       CHAT_SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN:-}
