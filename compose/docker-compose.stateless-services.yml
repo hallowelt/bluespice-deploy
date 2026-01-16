@@ -22,13 +22,12 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
     image: ${BLUESPICE_SERVICE_REPOSITORY}/wire:${VERSION}
     environment:
-      WIRE_WIKI_BASE_PATH: http://wiki-web:9090
-      WIRE_LOG_LEVEL: ${WIRE_LOG_LEVEL:-debug}
-      # should be added to stateless-services.yml, or a new wire.yml
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_wire
       VIRTUAL_PORT: 3333 # WIRE_PORT
       VIRTUAL_DEST: /
+      WIRE_LOG_LEVEL: ${WIRE_LOG_LEVEL:-debug}
+      WIRE_WIKI_BASE_PATH: http://wiki-web:9090
     secrets:
       - WIRE_API_KEY
       - WIRE_TOKEN_SALT
