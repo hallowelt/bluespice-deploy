@@ -3,6 +3,8 @@ services:
   chat:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-chat
     image: ${BLUESPICE_SERVICE_REPOSITORY}/chat:${VERSION}
+    depends_on:
+      - wiki-web
     environment:
       CHAT_WIKI_BASE_URL: http://wiki-web:9090
       CHAT_WIKI_ARTICLE_ENDPOINT: ${WIKI_PROTOCOL}://${WIKI_HOST}${WIKI_BASE_PATH:-/}wiki
@@ -20,8 +22,20 @@ services:
       CHAT_ROCKETCHAT_USERNAME: ${ROCKETCHAT_USERNAME:-}
       CHAT_ROCKETCHAT_PASSWORD_SHA256: ${ROCKETCHAT_PASSWORD_SHA256:-}
       CHAT_ROCKETCHAT_SUBSCRIBE_CHANNELS: ${ROCKETCHAT_SUBSCRIBE_CHANNELS:-general}
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_chat
+      VIRTUAL_PORT: 3002
+      VIRTUAL_DEST: /
     secrets:
       - CHAT_BRIDGE_TOKEN
       - CHAT_WIKI_CHAT_TOKEN_SALT
       - CHAT_WIKI_ACCESS_TOKEN
     restart: unless-stopped
+  wiki-web:
+    secrets:
+      - INTERNAL_CHAT_TOKEN
+      - INTERNAL_CHAT_WIKI_ACCESS_TOKEN
+  wiki-task:
+    secrets:
+      - INTERNAL_CHAT_TOKEN
+      - INTERNAL_CHAT_WIKI_ACCESS_TOKEN
