@@ -6,7 +6,6 @@ services:
     depends_on:
       - ai-database
     environment:
-      AI__LOGGING__LEVEL: ${AI_LOG_LEVEL:-ERROR}
       AI__MYSQL__USER: ${DB_USER}
       AI__MYSQL__PASSWORD: ${DB_PASS}
       AI__MYSQL__HOST: ${DB_HOST}
