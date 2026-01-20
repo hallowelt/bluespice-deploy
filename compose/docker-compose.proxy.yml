@@ -2,7 +2,7 @@ services:
 
   proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/proxy:${VERSION}
-    container_name: bluespice-proxy
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-proxy
     restart: unless-stopped
     ports:
       - "443:443"
@@ -21,6 +21,12 @@ services:
       VIRTUAL_PATH: /
       VIRTUAL_PORT: 9090
 
+  wire:
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_wire
+      VIRTUAL_PORT: 3333
+      VIRTUAL_DEST: /
 
   diagram:
     environment:

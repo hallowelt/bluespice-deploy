@@ -48,6 +48,12 @@ fi
 if [ "${ANTIVIRUS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
 fi
+if [ "${CHAT}" == "true" ]; then
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.chat.yml"
+	if [ "${AI}" == "true" ]; then
+		EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.ai.yml"
+	fi
+fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
 fi
@@ -55,6 +61,10 @@ if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
+fi
+
+if [ -f docker-compose.override.yml ]; then
+       EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
 fi
 ##allow custom services repo for testing
 if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
@@ -71,6 +81,7 @@ fi
 	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
 		docker compose \
 		-f docker-compose.helper-service.yml \
+		-f docker-compose.secrets.yml \
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \

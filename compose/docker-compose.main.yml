@@ -14,7 +14,6 @@ x-common-environment: &common-environment
   WIKI_PROTOCOL: ${WIKI_PROTOCOL}
   WIKI_BASE_PATH: ${WIKI_BASE_PATH:-/}
 
-
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_ROOT_USER: ${DB_ROOT_USER}
@@ -29,21 +28,29 @@ x-common-environment: &common-environment
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
 
+x-common-secrets: &common-secrets
+  - INTERNAL_SIMPLESAMLPHP_ADMIN_PASS
+  - INTERNAL_SIMPLESAMLPHP_SECRET_SALT
+  - INTERNAL_WIKI_SECRETKEY
+  - INTERNAL_WIKI_UPGRADEKEY
+  - INTERNAL_WIKI_TOKEN_AUTH_SALT
+  - INTERNAL_WIRE_API_KEY
+
 services:
   wiki-web:
     image: ${BLUESPICE_WIKI_IMAGE}
-    container_name: bluespice-wiki-web
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web
     restart: unless-stopped
     environment:
       <<: *common-environment
     command: start-web
-
     volumes:
       - ${DATADIR}/wiki:/data
+    secrets: *common-secrets
 
   wiki-task:
     image: ${BLUESPICE_WIKI_IMAGE}
-    container_name: bluespice-wiki-task
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-task
     restart: unless-stopped
     command: ["start-task --runAll"]
     environment:
@@ -51,3 +58,4 @@ services:
       BACKUP_HOUR: ${BACKUP_HOUR}
     volumes:
       - ${DATADIR}/wiki:/data
+    secrets: *common-secrets

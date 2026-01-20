@@ -1,19 +1,30 @@
 services:
   cache:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
-    container_name: bluespice-cache
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-cache
     restart: unless-stopped
   pdf:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
-    container_name: bluespice-pdf
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
     restart: unless-stopped
   
   formula:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
-    container_name: bluespice-formula
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-formula
     restart: unless-stopped
 
   diagram:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
-    container_name: bluespice-diagram 
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-diagram
+    restart: unless-stopped
+
+  wire:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/wire:${VERSION}
+    environment:
+      WIRE_LOG_LEVEL: ${WIRE_LOG_LEVEL:-debug}
+      WIRE_WIKI_BASE_PATH: http://wiki-web:9090
+    secrets:
+      - WIRE_API_KEY
+      - WIRE_TOKEN_SALT
     restart: unless-stopped
