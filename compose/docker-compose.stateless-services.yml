@@ -22,7 +22,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
     image: ${BLUESPICE_SERVICE_REPOSITORY}/wire:${VERSION}
     environment:
-      WIRE_WIKI_BASE_PATH: http://${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web:9090
+      WIRE_LOG_LEVEL: ${WIRE_LOG_LEVEL:-debug}
+      WIRE_WIKI_BASE_PATH: http://wiki-web:9090
     secrets:
       - WIRE_API_KEY
       - WIRE_TOKEN_SALT

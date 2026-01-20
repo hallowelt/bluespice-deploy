@@ -48,11 +48,11 @@ fi
 if [ "${ANTIVIRUS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
 fi
-if [ "${AI}" == "true" ]; then
-	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.ai.yml"
-fi
 if [ "${CHAT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.chat.yml"
+	if [ "${AI}" == "true" ]; then
+		EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.ai.yml"
+	fi
 fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
