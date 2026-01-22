@@ -17,6 +17,7 @@ Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Insta
 |------------------------------|----------------|------------------------------------------------------|----------|
 |`BLUESPICE_SERVICE_REPOSITORY`| `bluespice`    | pull Docker images from an alternative service repo  | Yes      |
 | `BLUESPICE_WIKI_IMAGE`       |edition-specific| use an alternative image for the wiki-containers     | Yes      |
+| `COMPOSE_PROJECT_NAME`       | `bluespice`    | use an alternate-docker-compose-name                 | Yes      |
 | `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
 | `ANTIVIRUS`                  | `false`        | enables ClamAV antivirus service                     | Yes      |
 | `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
