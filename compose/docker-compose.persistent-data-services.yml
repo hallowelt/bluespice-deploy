@@ -25,7 +25,7 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
     healthcheck:
-      test: mysqladmin ping 
+      test: mysqladmin ping
       start_period: 5s
       interval: 5s
       timeout: 5s
