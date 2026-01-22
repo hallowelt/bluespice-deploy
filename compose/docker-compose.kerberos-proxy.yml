@@ -14,7 +14,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     labels:
       - com.github.nginx-proxy.nginx=true
-  
 
   kerberos-proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/kerberosproxy:${VERSION}
