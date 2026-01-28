@@ -1,0 +1,17 @@
+x-common-environment: &common-environment
+
+services:
+  restore:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    depends_on:
+      database:
+        condition: service_healthy
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-restore
+    volumes:
+      - ${DATADIR}:/data
+      - ${BACKUPDIR}:/data/backup
+      - /var/run/docker.sock:/var/run/docker.sock
+    enf_flie:
+      - .env
+    restart: unless-stopped
+    command: ["run-backup"]

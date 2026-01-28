@@ -57,6 +57,9 @@ fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
 fi
+if [ "${RUN_BACKUP}" == "true" ]; then
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.backup.yml"
+fi
 if [ "${KERBEROS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 else
