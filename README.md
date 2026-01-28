@@ -1,6 +1,6 @@
 <img alt="BlueSpice Logo" align="right" src="https://bluespice.com/wp-content/uploads/2022/09/bluespice_logo.png" />
 
-# `bluespice-deploy` service for BlueSpice
+# `bluespice-deploy` repo for BlueSpice
 
 This repo controls the Bluespice Stack. 
 
