@@ -66,12 +66,8 @@ fi
 if [ -f docker-compose.override.yml ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
 fi
-##allow custom services repo for testing
-if [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
-	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}
-else
-	BLUESPICE_SERVICE_REPOSITORY='bluespice'
-fi
+
+BLUESPICE_SERVICE_REPOSITORY="${BLUESPICE_SERVICES_REPOSITORY:-bluespice}"
 ##allow custom wiki image for testing
 if [ -n "${BLUESPICE_WIKI_IMAGE}" ]; then
 	WIKI_IMAGE=${BLUESPICE_WIKI_IMAGE}
