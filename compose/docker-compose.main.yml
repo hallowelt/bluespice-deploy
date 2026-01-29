@@ -1,4 +1,4 @@
-name: bluespice
+name: ${COMPOSE_PROJECT_NAME:-bluespice}
 
 x-common-environment: &common-environment
   VERSION: ${VERSION}
