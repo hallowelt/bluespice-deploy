@@ -16,7 +16,7 @@ services:
       - com.github.nginx-proxy.nginx=true
 
   kerberos-proxy:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/kerberos-proxy:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/kerberosproxy:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-kerberosproxy
     restart: unless-stopped
     volumes:
