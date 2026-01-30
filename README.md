@@ -17,11 +17,14 @@ Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Insta
 |------------------------------|----------------|------------------------------------------------------|----------|
 |`BLUESPICE_SERVICE_REPOSITORY`| `bluespice`    | pull Docker images from an alternative service repo  | Yes      |
 | `BLUESPICE_WIKI_IMAGE`       |edition-specific| use an alternative image for the wiki-containers     | Yes      |
+| `COMPOSE_PROJECT_NAME`       | `bluespice`    | use an alternate-docker-compose-name                 | Yes      |
 | `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
 | `ANTIVIRUS`                  | `false`        | enables ClamAV antivirus service                     | Yes      |
 | `LETSENCRYPT`                | `false`        | enables LetsEcrpyt cert renew                        | Yes      |
 | `KERBEROS`                   | `false`        | enables Kerberos-Authentication                      | Yes      |
 | `TZ`                         | `UTC`          | Timezone for BlueSpice and container system time     | Yes      |
+| `CHAT`                       | `false`        | enables [Chat service connection](https://en.wiki.bluespice.com/wiki/Manual:Extension/ChatBot)                          | Yes      |
+| `AI`                         | `false`        | enables [AI service connection](https://en.wiki.bluespice.com/wiki/Manual:AI_integrations_-_Overview)                              | Yes      |
 
 For more variables to set in `compose/.env`, please also check [documentation](https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md) of the image behind the wiki-containers.
 

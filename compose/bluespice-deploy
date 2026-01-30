@@ -77,6 +77,21 @@ if [ -n "${BLUESPICE_WIKI_IMAGE}" ]; then
 	WIKI_IMAGE=${BLUESPICE_WIKI_IMAGE}
 fi
 
+if [ ! -d ${DATADIR}/.secrets ]; then	
+	echo "Preparing Secrets for 5.2.x"
+	BLUESPICE_WIKI_IMAGE=${WIKI_IMAGE}	\
+	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
+		docker compose \
+		-f docker-compose.helper-service.yml \
+		-f docker-compose.secrets.yml \
+		-f docker-compose.main.yml \
+		-f docker-compose.persistent-data-services.yml \
+		-f docker-compose.stateless-services.yml \
+		${EXTENDED_TOOLS} \
+		up prepare
+	echo "Preparation finished"
+fi
+
 	BLUESPICE_WIKI_IMAGE=${WIKI_IMAGE}	\
 	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
 		docker compose \
