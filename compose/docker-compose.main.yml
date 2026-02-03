@@ -27,7 +27,7 @@ x-common-environment: &common-environment
   SMTP_USER: ${SMTP_USER}
   SMTP_PASS: ${SMTP_PASS}
   SMTP_ID_HOST: ${SMTP_ID_HOST}
-
+  CHAT_HOST: ${CHAT_HOST:--}
 x-common-secrets: &common-secrets
   - INTERNAL_SIMPLESAMLPHP_ADMIN_PASS
   - INTERNAL_SIMPLESAMLPHP_SECRET_SALT

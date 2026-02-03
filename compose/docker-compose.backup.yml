@@ -2,7 +2,7 @@ x-common-environment: &common-environment
 
 services:
   restore:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    image: docker.bluespice.com/bluespice-qa/backup:latest 
     depends_on:
       database:
         condition: service_healthy
@@ -11,7 +11,7 @@ services:
       - ${DATADIR}:/data
       - ${BACKUPDIR}:/data/backup
       - /var/run/docker.sock:/var/run/docker.sock
-    enf_flie:
+    env_file:
       - .env
     restart: unless-stopped
-    command: ["run-backup"]
+    command: ["run-backups"]
