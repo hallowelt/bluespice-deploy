@@ -13,8 +13,8 @@ services:
   database:
     image: bluespice/database:${VERSION}
     volumes:
-      - ${DATADIR}/database/data:/config/log/mysql
-      - ${DATADIR}/database/logs:/config/databases
+      - ${DATADIR}/database/data:/config/databases
+      - ${DATADIR}/database/logs:/config/log/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=${DB_NAME}
