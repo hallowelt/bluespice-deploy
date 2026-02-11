@@ -28,3 +28,13 @@ services:
       - WIRE_API_KEY
       - WIRE_TOKEN_SALT
     restart: unless-stopped
+
+  statisticsdashboard:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/statisticsdashboard:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-statisticsdashboard
+    environment:
+      MYSL_HOST: ${DB_HOST}
+      MYSL_PORT: ${DB_PORT:-3306}
+      MYSL_USER: ${DB_USER}
+      MYSL_PASSWORD: ${DB_PASS}
+    restart: unless-stopped
