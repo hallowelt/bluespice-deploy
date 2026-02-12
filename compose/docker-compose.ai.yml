@@ -34,7 +34,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-ai-database
     image: neo4j:5
     depends_on: 
-      - wiki-task
+      wiki-task:
+        condition: service_healthy
     environment:
       NEO4J_AUTH: neo4j/${AI_DB_PASS}
     volumes:
