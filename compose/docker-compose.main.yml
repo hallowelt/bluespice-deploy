@@ -48,6 +48,7 @@ services:
     command: start-installer
     volumes:
       - ${DATADIR}/wiki:/data
+    secrets: *common-secrets
 
   wiki-web:
     image: ${BLUESPICE_WIKI_IMAGE}
