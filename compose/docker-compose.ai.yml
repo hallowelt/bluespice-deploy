@@ -14,7 +14,8 @@ services:
       AI__NEO4J__PASSWORD: ${AI_DB_PASS}
       AI__NEO4J__URL: neo4j://ai-database:7687
       AI__NEO4J__DATABASE: ${AI_DB_NAME:-bluespice}
-      AI__EMBEDDER_PROVIDER: ${EMBEDDER_PROVIDER} # azure, google, ionos, ollama, openai
+      # when embedder is not specified, the llm provider will be used
+      # AI__EMBEDDER_PROVIDER: ${EMBEDDER_PROVIDER} # azure, google, ionos, ollama, openai
       AI__LLM_PROVIDER: ${LLM_PROVIDER} # azure, google, ionos, ollama, openai
       AI__AZURE__REGION: ${AZURE_REGION:-westeurope}
       AI__AZURE__OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY:-}
@@ -22,8 +23,10 @@ services:
       AI__GOOGLE__API_KEY: ${GOOGLE_API_KEY:-}
       AI__IONOS__API_KEY: ${IONOS_API_KEY:-}
       AI__IONOS__BASE_URL: ${IONOS_BASE_URL:-https://openai.inference.de-txl.ionos.com}
-      AI__OPENAI__API_KEY: ${IONOS_API_KEY:-}
+      AI__OPENAI__API_KEY: ${OPENAI_API_KEY:-}
       AI__OLLAMA__URL: ${OLLAMA_URL:-}
+      AI__OLLAMA__EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-mxbai-embed-large:335m}
+      AI__OLLAMA__MODEL: ${OLLAMA_LLM_MODEL:-llama3.3}
     secrets:
       - AI__SECURITY__STATIC_API_TOKEN
     volumes:
