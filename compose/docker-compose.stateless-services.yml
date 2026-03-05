@@ -33,8 +33,9 @@ services:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/statisticsdashboard:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-statisticsdashboard
     environment:
-      MYSL_HOST: ${DB_HOST}
-      MYSL_PORT: ${DB_PORT:-3306}
-      MYSL_USER: ${DB_USER}
-      MYSL_PASSWORD: ${DB_PASS}
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_PORT: ${DB_PORT:-3306}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_DB_NAME: ${DB_NAME}
     restart: unless-stopped
