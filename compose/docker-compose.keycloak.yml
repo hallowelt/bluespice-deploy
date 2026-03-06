@@ -1,0 +1,47 @@
+services:
+
+    keycloak:
+      image: quay.io/keycloak/keycloak:latest 
+      container_name: keycloak
+      command: start
+      restart: always
+      environment:
+       #configuration for subpath
+       - KC_HTTP_ENABLED=true
+       - HTTP_ENABLED=true
+         #- KC_HOSTNAME=${WIKI_PROTOCOL}://${WIKI_HOST}:${WIKI_PORT}/_auth
+       - KC_HOSTNAME=${WIKI_PROTOCOL}://${WIKI_HOST}/_auth
+       - KC_HOSTNAME_STRICT=true
+       - KC_HTTP_RELATIVE_PATH=/_auth
+       - KC_HTTP_MANAGEMENT_RELATIVE_PATH=/_auth
+       - KC_FEATURES=hostname:v2
+       #configuration for proxy end
+       - KC_DB=mariadb
+       - KC_DB_USERNAME=keycloak
+       - KC_DB_PASSWORD=keycloakpassword
+       - KC_DB_URL_HOST=${DB_HOST}
+       - KC_DB_URL_PORT=3306
+       - KC_DB_URL_DATABASE=keycloak
+        # db end
+       - KC_HEALTH_ENABLED=true
+       - KC_METRICS_ENABLED=true
+       - KC_PROXY_ADDRESS_FORWARDING=true
+       - KC_HOSTNAME_STRICT=false
+       - KC_PROXY=edge
+       - KEYCLOAK_CREATE_ADMIN_USER=true
+       - KEYCLOAK_LOGLEVEL=DEBUG 
+       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      depends_on:
+        - database
+
+    oauth2-proxy:
+      image: quay.io/oauth2-proxy/oauth2-proxy:v7.14.2
+      ports:
+        - 4180:4180
+      hostname: oauth2-proxy
+      command: --config /oauth2-proxy.cfg
+      volumes:
+        - "./oauth2-proxy.cfg:/oauth2-proxy.cfg"
+      depends_on:
+        - keycloak

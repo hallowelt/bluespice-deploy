@@ -1,0 +1,34 @@
+services:
+
+    keycloak:
+      image: quay.io/keycloak/keycloak:latest 
+      container_name: keycloak
+      command: start
+      restart: always
+      environment:
+       #stuff for subtah
+       - KC_HTTP_ENABLED=true
+       - HTTP_ENABLED=true
+       - KC_HOSTNAME=${WIKI_PROTOCOL}://${WIKI_HOST}:${WIKI_PORT}/_auth
+       - KC_HOSTNAME_STRICT=true
+       - KC_HTTP_RELATIVE_PATH=/_auth
+       - KC_HTTP_MANAGEMENT_RELATIVE_PATH=/_auth
+       - KC_FEATURES=hostname:v2
+       #stuff for proxy end
+       - KC_DB=mariadb
+       - KC_DB_USERNAME=${DB_USER}
+       - KC_DB_PASSWORD=${DB_PASS}
+       - KC_DB_URL_HOST=${DB_HOST}
+       - KC_DB_URL_PORT=3306
+       - KC_DB_URL_DATABASE=keycloak
+       - KC_HEALTH_ENABLED=true
+       - KC_METRICS_ENABLED=true
+       - KC_PROXY_ADDRESS_FORWARDING=true
+       - KC_HOSTNAME_STRICT=false
+       - KC_PROXY=edge
+       - KEYCLOAK_CREATE_ADMIN_USER=true
+       - KEYCLOAK_LOGLEVEL=DEBUG 
+       - KEYCLOAK_ADMIN=admin
+       - KEYCLOAK_ADMIN_PASSWORD=admin
+      depends_on:
+        - database
