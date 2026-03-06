@@ -46,19 +46,21 @@ else
 	WIKI_IMAGE=bluespice/wiki:${VERSION}
 fi
 if [ "${AUTH}" == "true" ]; then
-	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.keycloack.yml"
+	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.keycloak.yml"
 fi
 if [ "${ANTIVIRUS}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.clamav-antivirus.yml"
 fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
-fi
-if [ "${KERBEROS}" == "true" ]; then
-	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
+#if [ "${KERBEROS}" == "true" ]; then
+#	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
+#else
+#	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
+#fi
 
 if [ -f docker-compose.override.yml ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
