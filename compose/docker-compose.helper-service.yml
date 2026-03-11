@@ -54,12 +54,7 @@ services:
       prepare:
         condition: service_completed_successfully
 
-  wiki-task:
-    depends_on:
-      upgrade:
-        condition: service_completed_successfully
-
-  wiki-web:
+  wiki-installer:
     depends_on:
       upgrade:
         condition: service_completed_successfully

@@ -30,6 +30,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  wiki-installer:
+    depends_on:
+        database:
+            condition: service_healthy
+        search:
+            condition: service_healthy
+      
   wiki-web:
     depends_on:
         database:
