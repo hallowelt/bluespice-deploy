@@ -38,4 +38,11 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_DB_NAME: ${DB_NAME}
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_statisticsdashboard/
+      VIRTUAL_PORT: 3000
+      VIRTUAL_DEST: /
+      GF_SERVER_ROOT_URL: https://${WIKI_HOST}${WIKI_BASE_PATH:-/}_statisticsdashboard/
+      GF_SERVER_PROTOCOL: http
+      GF_SERVER_DOMAIN: ${WIKI_HOST}      
     restart: unless-stopped

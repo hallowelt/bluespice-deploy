@@ -27,6 +27,7 @@ services:
       AI__OLLAMA__URL: ${OLLAMA_URL:-}
       AI__OLLAMA__EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-mxbai-embed-large:335m}
       AI__OLLAMA__MODEL: ${OLLAMA_LLM_MODEL:-llama3.3}
+      AI__ENVIRONMENT: ${AI__ENVIRONMENT:-production}
     secrets:
       - AI__SECURITY__STATIC_API_TOKEN
     volumes:
@@ -44,6 +45,8 @@ services:
     volumes:
       - ${DATADIR}/ai-data:/data
 
+
+
   chat:
     depends_on:
       - ai
@@ -51,3 +54,28 @@ services:
       CHAT_AI_CHAT_SERVICE_URL: http://ai:8000
     secrets:
       - CHAT_AI_CHAT_SERVICE_API_KEY
+
+  prompt:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-prompt
+    image:  ${BLUESPICE_SERVICE_REPOSITORY}/prompt:${VERSION}
+    environment:
+      PROMPT_WIKI_BASE_PATH: http://wiki-web:9090
+      PROMPT_BRIDGE_URL: http://chat:3000
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: /_prompt
+      VIRTUAL_PORT: 3336
+      VIRTUAL_DEST: /
+    secrets:
+      - PROMPT_TOKEN_SALT
+      - PROMPT_BRIDGE_TOKEN
+    restart: unless-stopped
+
+  mcp:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/mcp:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-mcp
+    environment:
+      MCP_WIKI_BASE_PATH: http://wiki-web:9090
+    restart: unless-stopped
+    secrets:
+      - MCP_TOKEN_SALT
+      - MCP_WIKI_API_KEY
