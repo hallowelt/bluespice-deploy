@@ -1,7 +1,9 @@
 services:
   cache:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
+    image: valkey/valkey:latest
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-cache
+    healthcheck:
+      test: redis-cli ping || exit 1
     restart: unless-stopped
   pdf:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
