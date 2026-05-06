@@ -1,0 +1,30 @@
+{{- range $svcName, $svc := .Values.statelessbackendServices }}
+{{- if $svc.volumes }}
+{{- range $index, $vol := $svc.volumes }}
+{{- $claimName := default (printf "%s-pvc" $vol.name) $vol.claim }}
+{{- $hasDetails := or $vol.storageClassName $vol.accessModes $vol.resources $vol.claim $vol.path }}
+{{- if $hasDetails }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $claimName }}
+  namespace: {{ default "default" $.Release.Namespace }}
+spec:
+  storageClassName: {{ default "" $vol.storageClassName }}
+  accessModes:
+    {{- if $vol.accessModes }}
+    {{- range $mode := $vol.accessModes }}
+    - {{ $mode }}
+    {{- end }}
+    {{- else }}
+    - ReadWriteOnce
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ default "5Gi" (dig "requests" "storage" "" $vol.resources) }}
+
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

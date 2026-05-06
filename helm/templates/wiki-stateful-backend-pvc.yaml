@@ -1,0 +1,22 @@
+{{- range $key, $value := .Values.statefulBackendServices }}
+{{- if $value.enabled }}
+{{- range $index, $volume := $value.volumes }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $volume.claim }}
+  namespace: {{ default "default" $.Release.Namespace }}
+spec:
+  storageClassName: {{ $volume.storageClassName }}
+  accessModes: 
+    {{- range $mode := $volume.accessModes }}
+      - {{ $mode }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ $volume.resources.requests.storage }}
+
+---
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,27 @@
+{{- $wikiWeb := default (dict) (index .Values.wikiServices "wiki-web") }}
+{{- if and $wikiWeb.hpa $wikiWeb.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ printf "%s-hpa" $wikiWeb.name }}
+  namespace: {{ default "default" .Release.Namespace }}
+  labels:
+    app: {{ $wikiWeb.name }}
+    {{- include "bluespice.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ $wikiWeb.name }}
+  minReplicas: {{ $wikiWeb.hpa.minReplicas }}
+  maxReplicas: {{ $wikiWeb.hpa.maxReplicas }}
+  {{- with $wikiWeb.hpa.metrics }}
+  metrics:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $wikiWeb.hpa.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+---
+{{- end }}
