@@ -1,0 +1,312 @@
+# Global values
+global:
+  imagePullPolicy: IfNotPresent
+  regcred: ""
+  regcredName: ""
+  # Security settings for pods.
+  # For OpenShift, fsGroup is often required to grant volume access to the pod's random user ID.
+  # The fsGroup value may need to be adjusted based on the OpenShift project's allocated supplemental group range.
+  podSecurityContext:
+    # fsGroup: 1000770000
+
+  # Security settings for containers. These are best practices for hardening containers.
+  containerSecurityContext: {}
+  svc:
+    type: ClusterIP
+    port: 80
+  image:
+    repository:    # shared base repo for wiki and backend
+    backendrepo: 
+    wikiTag: "5.1.5"                                  # defaults to chart appVersion when empty
+    backendTag: "5.1.5"                               # defaults to chart appVersion when empty
+
+#if needed change tls secret and add annottations.
+ingress:
+    ingressAnnotations: {}
+    tls: true
+    name: wiki-web
+    tlsSecret: wiki-ingress-cert
+    ingressClassName: ""
+
+## If required, update kuberntes specific configs like resources, probes etc.
+## Enable wikiServicesCombineWebAndTask to run wiki-web and wiki-task in one pod
+## when RWX is not available. Both containers will share the same PVC mounts.
+wikiServicesCombineWebAndTask: false
+wikiServices:
+  wiki-web:
+    name: wiki-web
+    deploymentAnnotations: {}
+    podAnnotations: {}
+    podLabels: {}
+    ports: []
+    replicas: 1
+    serviceEnabled: true
+    targetPort: 9090
+    args: ["start-web"]    
+    vpa:
+      enabled: false
+      updatePolicy: {}
+      resourcePolicy: {}
+    hpa:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80
+      behavior: {}
+    volumes:
+      - path: /data
+        name: wiki
+        claim: wiki-pvc   # set to existing PVC name; falls back to <name>-pvc if omitted
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+  wiki-task:
+    name: wiki-task
+    serviceEnabled: false
+    deploymentAnnotations: {}
+    targetPort: 9090
+    podAnnotations: {}
+    podLabels: {}
+    ports: []
+    replicas: 1
+    extraEnv:
+      BACKUP_HOUR: "02"
+    args: ["start-task --runAll"]
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    volumes:
+      - path: /data
+        name: wiki
+        claim: wiki-pvc
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+# Wiki-wide configuration shared by wiki-web and wiki-task.
+wikiEnv:
+  # Updated env variables to be passed to wiki deployment.
+  configEnv:
+    VERSION: ""
+    EDITION: ""
+    WIKI_NAME: ""
+    WIKI_LANG: ""
+    WIKI_PASSWORDSENDER: 
+    WIKI_EMERGENCYCONTACT: 
+    WIKI_HOST: ""
+    WIKI_PORT: ""
+    WIKI_PROTOCOL: ""
+    DB_USER: ""
+    DB_HOST: ""
+    DB_NAME: ""
+    DB_PREFIX: ""
+    SMTP_HOST: ""
+    SMTP_PORT: ""
+    SMTP_USER: ""
+    SMTP_PASS: ""
+    SMTP_ID_HOST: ""
+    SEARCH_HOST: ""
+    SEARCH_PORT: ""
+    SEARCH_PROTOCOL: ""
+    SEARCH_USER: ""
+
+  # Required only if yo are going to use external database.
+  secretEnv:
+    DB_PASS : ""  # supply at install time via --set/--set-file; do not commit real secrets
+    SEARCH_PASS: ""
+  existingSecret:
+    name: ""        # if set, reuse this Secret and skip creation
+    dbKey: DB_PASS
+    searchKey: SEARCH_PASS
+
+# Update the storage class name and storage capacity of wiki pvc.
+wikiServicesVolume:
+  wiki-pvc:
+    storageClassName: ""
+    accessModes: ["ReadWriteMany"]
+    resources:
+      requests:
+        storage: ""
+
+
+# Value overrides for stateless backend services. Update k8s specific configs if required.
+
+statelessbackendServices:
+  diagram:
+    name: diagram
+    replicas: 1
+    port: 80  
+    targetPort: 8080
+    hpa:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80
+      behavior: {}
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  pdf:
+    name: pdf
+    replicas: 1
+    port: 8080  
+    targetPort: 8080
+    hpa:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80
+      behavior: {}
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  formula:
+    name: formula
+    replicas: 1
+    port: 10044
+    targetPort: 10044
+    hpa:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 3
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80
+      behavior: {}
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  cache:
+    name: cache
+    replicas: 1
+    port: 11211
+    targetPort: 11211
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  collabpads:
+    name: collabpads
+    replicas: 1
+    port: 80
+    targetPort: 8080
+    livenessProbe: {}
+    readinessProbe: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    configEnv:
+      COLLABPADS_BACKEND_WIKI_BASEURL: http://wiki-web
+      COLLABPADS_BACKEND_MONGO_DB_HOST: collabpads-database
+      COLLABPADS_BACKEND_MONGO_DB_PORT: "27017"
+      COLLABPADS_BACKEND_LOG_LEVEL: error
+      COLLABPADS_BACKEND_PORT: "8080"
+      COLLABPADS_BACKEND_MONGO_DB_NAME: collabpads
+      COLLABPADS_BACKEND_MONGO_DB_USER: ""
+    secretEnv:
+      COLLABPADS_BACKEND_MONGO_DB_PASSWORD: ""
+    existingSecret:
+      name: ""          # reuse this Secret if set; skips creation
+      passwordKey: COLLABPADS_BACKEND_MONGO_DB_PASSWORD
+
+statefulBackendServices:
+  collabpadsDatabase:
+    enabled: true
+    name: collabpads-database
+    image: mongo:4.4-focal
+    port: 27017
+    targetPort: 27017
+    podSecurityContext: {}
+    volumes:
+      - path: /data/db
+        claim: collabpads-pvc
+        storageClassName: ""           
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: ""
+  search:
+    enabled: false
+    name: search
+    image: bluespice/search:4.5.3
+    port: 9200
+    targetPort: 9200    
+    podSecurityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    volumes:
+      - path: /usr/share/opensearch/data
+        claim: search-pvc
+        storageClassName: ""           
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: ""
+  database:
+    enabled: true
+    name: database
+    image: mariadb:10.5
+    port: 3306
+    targetPort: 3306
+    podSecurityContext: {}
+    env:
+      - name: MARIADB_DATABASE
+        value: bluespice
+      - name: MARIADB_USER
+        value: bluespice
+    secrets:
+      MARIADB_ROOT_PASSWORD: ""
+      MARIADB_PASSWORD: ""    
+    volumes:
+      - path: /var/lib/mysql
+        claim: database-data-pvc
+        storageClassName: ""           
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+      - path: /var/log/mysql
+        claim: database-logs-pvc
+        storageClassName: ""           
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: ""

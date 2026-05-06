@@ -1,0 +1,95 @@
+{{- range $key, $value := .Values.statelessbackendServices }}
+{{- $regcredName := default (printf "%s-regcred" $.Chart.Name) $.Values.global.regcredName }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $value.name }}
+  namespace: {{ default "default" $.Release.Namespace }}
+  labels:
+    app: {{ $value.name }}
+    {{- include "bluespice.labels" $ | nindent 4 }}
+spec:
+  replicas: {{ default 1 $value.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $value.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $value.name }}
+        {{- include "bluespice.selectorLabels" $ | nindent 8 }}
+    spec:
+      {{- with $.Values.global.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ $value.name }}
+        {{- $baseRepo := default "docker.bluespice.com/bluespice" $.Values.global.image.backendrepo }}
+        {{- $tag := default $.Chart.AppVersion $.Values.global.image.backendTag }}
+        image: {{ printf "%s/%s:%s" $baseRepo $value.name $tag }}
+        imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}
+        {{- with $.Values.global.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - containerPort: {{ $value.targetPort }}
+        {{- $collabpadsDbEnabled := and (eq $value.name "collabpads") (and $.Values.statefulBackendServices $.Values.statefulBackendServices.collabpadsDatabase $.Values.statefulBackendServices.collabpadsDatabase.enabled) }}
+        {{- if or $value.configEnv (and (not $collabpadsDbEnabled) $value.secretEnv) }}
+        envFrom:
+          {{- if $value.configEnv }}
+          - configMapRef:
+              name: {{ include "bluespice.fullname" $ }}-{{ $value.name }}-config
+          {{- end }}
+          {{- if and (not $collabpadsDbEnabled) (or $value.secretEnv $value.existingSecret.name) }}
+          - secretRef:
+              name: {{ default (printf "%s-%s-secret" (include "bluespice.fullname" $) $value.name) $value.existingSecret.name }}
+          {{- end }}
+        {{- end }}
+        {{- with $value.resources }}
+        resources:
+          {{- toYaml $value.resources | nindent 10 }}
+        {{- end }}
+        {{- with $value.livenessProbe }}
+        livenessProbe:
+          {{- toYaml $value.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- with $value.readinessProbe }}
+        readinessProbe:
+          {{- toYaml $value.readinessProbe | nindent 10 }}
+        {{- end }}
+        {{- if $value.volumes }}
+        volumeMounts:
+        {{- range $vol := $value.volumes }}
+        - name: {{ $vol.name }}
+          mountPath: {{ $vol.path }}
+        {{- end }}
+        {{- end }}
+      {{- if or $.Values.global.regcred $.Values.global.regcredName }}
+      imagePullSecrets:
+        - name: {{ $regcredName }}
+      {{- end }}
+      {{- if $value.volumes }}
+      volumes:
+      {{- range $vol := $value.volumes }}
+      - name: {{ $vol.name }}
+        persistentVolumeClaim:
+          claimName: {{ default (printf "%s-pvc" $vol.name) $vol.claim }}
+      {{- end }}
+      {{- end }}
+      {{- with $value.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $value.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $value.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+---
+{{- end }}
