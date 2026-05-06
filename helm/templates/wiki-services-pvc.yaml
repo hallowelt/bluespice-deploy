@@ -1,0 +1,18 @@
+{{- range $key, $value := .Values.wikiServicesVolume }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $key }}
+  namespace: {{ default "default" $.Release.Namespace }}
+spec:
+  storageClassName: {{ $value.storageClassName }}
+  accessModes:
+    {{- range $mode := $value.accessModes }}
+    - {{ $mode }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ default "5Gi" $value.resources.requests.storage }}
+
+---
+{{- end }}
