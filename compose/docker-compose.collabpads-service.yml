@@ -19,7 +19,7 @@ services:
       VIRTUAL_PORT: 8081
 
   collabpads-database:
-    image: mongo:8.0
+    image: mongo:8
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-collabpads-database
     restart: unless-stopped
     healthcheck:
