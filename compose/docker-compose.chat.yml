@@ -22,12 +22,11 @@ services:
       CHAT_ROCKETCHAT_USERNAME: ${ROCKETCHAT_USERNAME:-}
       CHAT_ROCKETCHAT_PASSWORD_SHA256: ${ROCKETCHAT_PASSWORD_SHA256:-}
       CHAT_ROCKETCHAT_SUBSCRIBE_CHANNELS: ${ROCKETCHAT_SUBSCRIBE_CHANNELS:-general}
-      # parameters for docker-compose.proxy.yml, the default proxy service
-      # these are defined here to make the chat service fully optional
-      VIRTUAL_HOST: ${WIKI_HOST}
-      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_chat
-      VIRTUAL_PORT: 3002
-      VIRTUAL_DEST: /
+    labels:
+      - "traefik.http.routers.chat.rule=Host(`${WIKI_HOST}`)&&PathPrefix(`/_chat`)"
+      - "traefik.http.routers.chat.entrypoints=websecure"
+      - "traefik.http.services.chat.loadbalancer.server.port=3002"
+      - "traefik.http.routers.chat.tls.certresolver=myresolver"
     secrets:
       - CHAT_BRIDGE_TOKEN
       - CHAT_WIKI_CHAT_TOKEN_SALT

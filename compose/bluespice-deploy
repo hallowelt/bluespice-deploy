@@ -56,9 +56,6 @@ if [ "${CHAT}" == "true" ]; then
 fi
 if [ "${LETSENCRYPT}" == "true" ]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy-letsencrypt.yml"
-fi
-if [ "${KERBEROS}" == "true" ]; then
-	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.kerberos-proxy.yml"
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
@@ -100,5 +97,6 @@ fi
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
+		-f docker-compose.keycloak.yml \
 		${EXTENDED_TOOLS} \
 		${DOCKER_ARGS[*]}
