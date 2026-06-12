@@ -42,7 +42,7 @@ spec:
       {{- $statefulSearchEnabled := and $.Values.statefulBackendServices $.Values.statefulBackendServices.search $.Values.statefulBackendServices.search.enabled }}
       initContainers:
         - name: prepare-bluespice
-          {{- $backendRepo := default "docker.bluespice.com/bluespice" $.Values.global.image.backendrepo }}
+          {{- $backendRepo := default "bluespice" $.Values.global.image.backendrepo }}
           {{- $backendTag := default $.Chart.AppVersion $.Values.global.image.backendTag }}
           image: {{ printf "%s/k8s-helper:%s" $backendRepo $backendTag }}
           imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}
@@ -67,7 +67,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ $value.name }}
-        {{- $baseRepo := default "docker.bluespice.com/bluespice" $.Values.global.image.repository }}
+        {{- $baseRepo := default "bluespice" $.Values.global.image.repository }}
         {{- $wikiTag := default $.Chart.AppVersion $.Values.global.image.wikiTag }}
         image: {{ printf "%s/wiki:%s" $baseRepo $wikiTag }}
         imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}     
@@ -103,7 +103,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: bluespice-database-secrets
-                key: MARIADB_PASSWORD
+                key: MYSQL_PASSWORD
         {{- else if or $.Values.wikiEnv.secretEnv.DB_PASS $.Values.wikiEnv.existingSecret.name }}
           - name: DB_PASS
             valueFrom:
@@ -143,7 +143,7 @@ spec:
         {{- end }}
       {{- if and $combineWebTask (eq $key "wiki-web") }}
       - name: {{ $wikiTask.name }}
-        {{- $baseRepo := default "docker.bluespice.com/bluespice" $.Values.global.image.repository }}
+        {{- $baseRepo := default "bluespice" $.Values.global.image.repository }}
         {{- $wikiTag := default $.Chart.AppVersion $.Values.global.image.wikiTag }}
         image: {{ printf "%s/wiki:%s" $baseRepo $wikiTag }}
         imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}     
@@ -179,7 +179,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: bluespice-database-secrets
-                key: MARIADB_PASSWORD
+                key: MYSQL_PASSWORD
         {{- else if or $.Values.wikiEnv.secretEnv.DB_PASS $.Values.wikiEnv.existingSecret.name }}
           - name: DB_PASS
             valueFrom:

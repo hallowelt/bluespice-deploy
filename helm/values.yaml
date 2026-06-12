@@ -15,10 +15,10 @@ global:
     type: ClusterIP
     port: 80
   image:
-    repository:    # shared base repo for wiki and backend
-    backendrepo: 
-    wikiTag: "5.1.2"                                  # defaults to chart appVersion when empty
-    backendTag: "5.1.2"                               # defaults to chart appVersion when empty
+    repository: "bluespice"    # shared base repo for wiki and backend
+    backendrepo: "bluespice"
+    wikiTag: ""                                       # defaults to chart appVersion when empty
+    backendTag: ""                                    # defaults to chart appVersion when empty
 
 # AI service settings (future use)
 ai:
@@ -234,7 +234,7 @@ statelessbackendServices:
     name: collabpads
     replicas: 1
     port: 80
-    targetPort: 8080
+    targetPort: 8081
     livenessProbe: {}
     readinessProbe: {}
     resources: {}
@@ -246,7 +246,7 @@ statelessbackendServices:
       COLLABPADS_BACKEND_MONGO_DB_HOST: collabpads-database
       COLLABPADS_BACKEND_MONGO_DB_PORT: "27017"
       COLLABPADS_BACKEND_LOG_LEVEL: error
-      COLLABPADS_BACKEND_PORT: "8080"
+      COLLABPADS_BACKEND_PORT: "8081"
       COLLABPADS_BACKEND_MONGO_DB_NAME: collabpads
       COLLABPADS_BACKEND_MONGO_DB_USER: ""
     secretEnv:
@@ -284,7 +284,7 @@ statefulBackendServices:
   collabpadsDatabase:
     enabled: true
     name: collabpads-database
-    image: mongo:4.4-focal
+    image: mongo:8.0
     port: 27017
     targetPort: 27017
     podSecurityContext: {}
@@ -299,7 +299,7 @@ statefulBackendServices:
   search:
     enabled: false
     name: search
-    image: bluespice/search:4.5.3
+    image: bluespice/search:5.2
     port: 9200
     targetPort: 9200    
     podSecurityContext:
@@ -316,27 +316,27 @@ statefulBackendServices:
   database:
     enabled: true
     name: database
-    image: mariadb:10.5
+    image: bluespice/database:5.2
     port: 3306
     targetPort: 3306
     podSecurityContext: {}
     env:
-      - name: MARIADB_DATABASE
+      - name: MYSQL_DATABASE
         value: bluespice
-      - name: MARIADB_USER
+      - name: MYSQL_USER
         value: bluespice
     secrets:
-      MARIADB_ROOT_PASSWORD: ""
-      MARIADB_PASSWORD: ""    
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_PASSWORD: ""
     volumes:
-      - path: /var/lib/mysql
+      - path: /config/databases
         claim: database-data-pvc
         storageClassName: ""           
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
             storage: 5Gi
-      - path: /var/log/mysql
+      - path: /config/log/mysql
         claim: database-logs-pvc
         storageClassName: ""           
         accessModes: ["ReadWriteOnce"]
