@@ -17,8 +17,8 @@ global:
   image:
     repository:    # shared base repo for wiki and backend
     backendrepo: 
-    wikiTag: "5.1.2"                                  # defaults to chart appVersion when empty
-    backendTag: "5.1.2"                               # defaults to chart appVersion when empty
+    wikiTag: "5.2"                                  # defaults to chart appVersion when empty
+    backendTag: "5.2"                               # defaults to chart appVersion when empty
 
 # AI service settings (future use)
 ai:
@@ -284,7 +284,7 @@ statefulBackendServices:
   collabpadsDatabase:
     enabled: true
     name: collabpads-database
-    image: mongo:4.4-focal
+    image: mongo:8.0
     port: 27017
     targetPort: 27017
     podSecurityContext: {}
@@ -299,7 +299,7 @@ statefulBackendServices:
   search:
     enabled: false
     name: search
-    image: bluespice/search:4.5.3
+    image: bluespice/search:5.2
     port: 9200
     targetPort: 9200    
     podSecurityContext:
