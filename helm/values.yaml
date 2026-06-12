@@ -284,7 +284,7 @@ statefulBackendServices:
   collabpadsDatabase:
     enabled: true
     name: collabpads-database
-    image: mongo:8.0
+    image: mongo:8.2
     port: 27017
     targetPort: 27017
     podSecurityContext: {}
