@@ -58,6 +58,9 @@ services:
   prompt:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-prompt
     image:  ${BLUESPICE_SERVICE_REPOSITORY}/prompt:${VERSION}
+    depends_on:
+      chat:
+        condition: service_healthy
     environment:
       PROMPT_WIKI_BASE_PATH: http://wiki-web:9090
       PROMPT_BRIDGE_URL: http://chat:3000
@@ -71,8 +74,11 @@ services:
     restart: unless-stopped
 
   mcp:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/mcp:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-mcp
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/mcp:${VERSION}
+    depends_on:
+      wiki-task:
+        condition: service_healthy
     environment:
       MCP_WIKI_BASE_PATH: http://wiki-web:9090
       VIRTUAL_HOST: ${WIKI_HOST}
