@@ -46,7 +46,7 @@ services:
             condition: service_healthy
         search:
             condition: service_healthy
-      
+
   wiki-web:
     depends_on:
         database:
