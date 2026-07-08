@@ -14,7 +14,6 @@ x-common-environment: &common-environment
   WIKI_PROTOCOL: ${WIKI_PROTOCOL}
   WIKI_BASE_PATH: ${WIKI_BASE_PATH:-/}
 
-
   DB_USER: ${DB_USER}
   DB_PASS: ${DB_PASS}
   DB_ROOT_USER: ${DB_ROOT_USER}
@@ -22,7 +21,6 @@ x-common-environment: &common-environment
   DB_HOST: ${DB_HOST}
   DB_NAME: ${DB_NAME}
   DB_PREFIX: ${DB_PREFIX}
-
 
   SMTP_HOST: ${SMTP_HOST}
   SMTP_PORT: ${SMTP_PORT}

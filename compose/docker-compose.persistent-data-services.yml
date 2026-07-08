@@ -12,6 +12,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
   database:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-database
