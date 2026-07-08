@@ -38,7 +38,7 @@ services:
   ai-database:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-ai-database
     image: neo4j:5
-    depends_on: 
+    depends_on:
       wiki-task:
         condition: service_healthy
     environment:

@@ -7,7 +7,7 @@ services:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
     restart: unless-stopped
-  
+
   formula:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-formula
@@ -44,5 +44,5 @@ services:
       VIRTUAL_DEST: /
       GF_SERVER_ROOT_URL: https://${WIKI_HOST}${WIKI_BASE_PATH:-/}_statisticsdashboard/
       GF_SERVER_PROTOCOL: http
-      GF_SERVER_DOMAIN: ${WIKI_HOST}      
+      GF_SERVER_DOMAIN: ${WIKI_HOST}
     restart: unless-stopped
