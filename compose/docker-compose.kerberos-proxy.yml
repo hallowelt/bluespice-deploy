@@ -25,6 +25,12 @@ services:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
 
+  collabpads:
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_collabpads/
+      VIRTUAL_PORT: 8081
+
   wire:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
