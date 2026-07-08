@@ -46,8 +46,6 @@ services:
     volumes:
       - ${DATADIR}/ai-data:/data
 
-
-
   chat:
     depends_on:
       - ai

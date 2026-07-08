@@ -31,6 +31,13 @@ services:
       VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_collabpads/
       VIRTUAL_PORT: 8081
 
+  wire:
+     environment:
+       VIRTUAL_HOST: ${WIKI_HOST}
+       VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_wire
+       VIRTUAL_PORT: 3333
+       VIRTUAL_DEST: /
+
   diagram:
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
