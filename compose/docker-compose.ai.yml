@@ -27,6 +27,7 @@ services:
       AI__OLLAMA__URL: ${OLLAMA_URL:-}
       AI__OLLAMA__EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-mxbai-embed-large:335m}
       AI__OLLAMA__MODEL: ${OLLAMA_LLM_MODEL:-llama3.3}
+      AI__ENVIRONMENT: ${AI__ENVIRONMENT:-production}
     secrets:
       - AI__SECURITY__STATIC_API_TOKEN
     volumes:

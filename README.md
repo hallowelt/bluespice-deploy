@@ -3,7 +3,7 @@
 Toolkit for containerized deployment of BlueSpice Wiki.
 
 ## Deployment
-Please follow the [installation guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Docker) in the BlueSpice Helpdesk.
+Please follow the [installation guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Docker) in the BlueSpice Helpdesk 📚. For questions and support, please use the contact [form 🌐](https://bluespice.com/contact/) or visit the [community forums 💡](https://community.bluespice.com/).
 
 ## Upgrade to BlueSpice 5
 For an existing BlueSpice 4.5.x installation using [an earlier stack](https://github.com/hallowelt/bluespice-deploy/tree/4.5.x) of `bluespice-deploy` docker containers, an automated upgrade is possible.
@@ -16,6 +16,7 @@ Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Insta
 | Variable Name                | Default Value  | Description                                          | Optional |
 |------------------------------|----------------|------------------------------------------------------|----------|
 |`BLUESPICE_SERVICE_REPOSITORY`| `bluespice`    | pull Docker images from an alternative service repo  | Yes      |
+| `SERVICES_REPOSITORY_PATH`   | none           |a previous alias to set `BLUESPICE_SERVICE_REPOSITORY`| Yes      |
 | `BLUESPICE_WIKI_IMAGE`       |edition-specific| use an alternative image for the wiki-containers     | Yes      |
 | `COMPOSE_PROJECT_NAME`       | `bluespice`    | use an alternate-docker-compose-name                 | Yes      |
 | `DATADIR`                    | `./_volume`    | Path to persitent Volumes                            | Yes      |
