@@ -88,3 +88,4 @@ services:
     secrets:
       - MCP_TOKEN_SALT
       - MCP_WIKI_API_KEY
+
