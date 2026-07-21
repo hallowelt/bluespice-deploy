@@ -31,6 +31,7 @@ services:
       AI__MCP__URL: http://mcp:4000/mcp
     secrets:
       - AI__SECURITY__STATIC_API_TOKEN
+      - AI__MCP__API_KEY
     volumes:
       - ${DATADIR}/wiki/bluespice/rag:/watch
     restart: unless-stopped
