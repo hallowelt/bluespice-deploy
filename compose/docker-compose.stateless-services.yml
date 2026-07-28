@@ -22,7 +22,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
     image: ${BLUESPICE_SERVICE_REPOSITORY}/wire:${VERSION}
     environment:
-      WIRE_LOG_LEVEL: ${WIRE_LOG_LEVEL:-debug}
+      WIRE_LOG_LEVEL: ${WIRE_LOG_LEVEL:-warning}
       WIRE_WIKI_BASE_PATH: http://wiki-web:9090
     secrets:
       - WIRE_API_KEY
@@ -46,3 +46,4 @@ services:
       GF_SERVER_PROTOCOL: http
       GF_SERVER_DOMAIN: ${WIKI_HOST}
     restart: unless-stopped
+
