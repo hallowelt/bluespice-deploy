@@ -28,6 +28,7 @@ services:
       AI__OLLAMA__EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-mxbai-embed-large:335m}
       AI__OLLAMA__MODEL: ${OLLAMA_LLM_MODEL:-llama3.3}
       AI__ENVIRONMENT: ${AI__ENVIRONMENT:-production}
+      TZ: ${TZ:-UTC}
     secrets:
       - AI__SECURITY__STATIC_API_TOKEN
     volumes:
@@ -42,6 +43,8 @@ services:
         condition: service_healthy
     environment:
       NEO4J_AUTH: neo4j/${AI_DB_PASS}
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_usage__report_enabled: "false"
     volumes:
       - ${DATADIR}/ai-data:/data
 
