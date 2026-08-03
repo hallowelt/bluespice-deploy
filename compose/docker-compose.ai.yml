@@ -88,9 +88,9 @@ services:
       VIRTUAL_PORT: 4000
       VIRTUAL_DEST: /
       MCP_WIKI_BASE_PATH: http://wiki-web:9090
-      MCP_OAUTH_ISSUER: http://wiki-web:9090/w/oauth2
-      MCP_OAUTH_AUTHORIZATION_ENDPOINT: http://wiki-web:9090/w/oauth2/authorize
-      MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/oauth2/access_token
+      MCP_OAUTH_ISSUER: http://wiki-web:9090/w/rest.php/oauth2
+      MCP_OAUTH_AUTHORIZATION_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/authorize
+      MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/access_token
       MCP_OAUTH_SCOPES: openid profile mcp
       MCP_OAUTH_PROXY_TOKEN_ENDPOINT: true
     restart: unless-stopped
