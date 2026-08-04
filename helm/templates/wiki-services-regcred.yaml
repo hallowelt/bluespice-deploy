@@ -1,0 +1,13 @@
+{{- if and $.Values.global.regcred (not $.Values.global.regcredName) }}
+{{- $regcredName := default (printf "%s-regcred" $.Chart.Name) $.Values.global.regcredName }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $regcredName }}
+  namespace: {{ default "default" $.Release.Namespace }}
+  labels:
+    {{- include "bluespice.labels" . | nindent 4 }}
+stringData:
+  .dockerconfigjson: {{ $.Values.global.regcred | quote }}
+type: kubernetes.io/dockerconfigjson
+{{- end }}

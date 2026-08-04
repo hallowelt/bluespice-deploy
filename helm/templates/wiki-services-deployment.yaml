@@ -1,0 +1,219 @@
+{{- $combineWebTask := default false .Values.wikiServicesCombineWebAndTask }}
+{{- $wikiTask := default (dict) (index .Values.wikiServices "wiki-task") }}
+{{- range $key, $value := .Values.wikiServices }}
+{{- if not (and $combineWebTask (eq $key "wiki-task")) }}
+{{- $regcredName := default (printf "%s-regcred" $.Chart.Name) $.Values.global.regcredName }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $value.name }}
+  namespace: {{ default "default" $.Release.Namespace }}
+  labels:
+    app: {{ $value.name }}
+    {{- include "bluespice.labels" $ | nindent 4 }}
+  {{- with $value.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ $value.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $value.name }}
+  template:
+    metadata:
+      {{- with $value.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ $value.name }}
+        {{- include "bluespice.selectorLabels" $ | nindent 8 }}
+        {{- with $value.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      enableServiceLinks: false
+      {{- with $.Values.global.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- $statefulDbEnabled := and $.Values.statefulBackendServices $.Values.statefulBackendServices.database $.Values.statefulBackendServices.database.enabled }}
+      {{- $statefulSearchEnabled := and $.Values.statefulBackendServices $.Values.statefulBackendServices.search $.Values.statefulBackendServices.search.enabled }}
+      {{- if $statefulDbEnabled }}
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ['sh', '-c', 'until nc -z {{ default "database" $.Values.statefulBackendServices.database.name }} {{ default 3306 $.Values.statefulBackendServices.database.port }}; do echo waiting for database; sleep 5; done;']
+      {{- end }}
+      containers:
+      - name: {{ $value.name }}
+        {{- $baseRepo := default "docker.bluespice.com/bluespice" $.Values.global.image.repository }}
+        {{- $wikiTag := default $.Chart.AppVersion $.Values.global.image.wikiTag }}
+        image: {{ printf "%s/wiki:%s" $baseRepo $wikiTag }}
+        imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}     
+        {{- with $.Values.global.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with $value.args }}
+        args:
+        {{- range . }}
+          - {{ . }}
+        {{- end }}
+        {{- end }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "bluespice.fullname" $ }}-wiki-config
+        env:
+        {{- if $value.extraEnv }}
+        {{- range $envKey, $envValue := $value.extraEnv }}
+          - name: {{ $envKey }}
+            value: "{{ $envValue }}"
+        {{- end }}
+        {{- end }}
+        {{- if $statefulDbEnabled }}
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: bluespice-database-secrets
+                key: MARIADB_PASSWORD
+        {{- else if or $.Values.wikiEnv.secretEnv.DB_PASS $.Values.wikiEnv.existingSecret.name }}
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (printf "%s-wiki-secrets" (include "bluespice.fullname" $)) $.Values.wikiEnv.existingSecret.name }}
+                key: {{ default "DB_PASS" $.Values.wikiEnv.existingSecret.dbKey }}
+        {{- end }}
+        {{- if and (not $statefulSearchEnabled) (or $.Values.wikiEnv.secretEnv.SEARCH_PASS $.Values.wikiEnv.existingSecret.name) }}
+          - name: SEARCH_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (printf "%s-wiki-secrets" (include "bluespice.fullname" $)) $.Values.wikiEnv.existingSecret.name }}
+                key: {{ default "SEARCH_PASS" $.Values.wikiEnv.existingSecret.searchKey }}
+        {{- end }}
+        ports:
+          - name: http 
+            containerPort: {{ $value.targetPort }}
+            protocol: TCP
+        {{- with $value.resources }}
+        resources:
+            {{- toYaml $value.resources | nindent 12 }}
+        {{- end }}
+        {{- with $value.livenessProbe }}
+        livenessProbe:
+            {{- toYaml $value.livenessProbe | nindent 12 }}
+        {{- end }}
+        {{- with $value.readinessProbe }}
+        readinessProbe:
+            {{- toYaml $value.readinessProbe | nindent 12 }}
+        {{- end }}
+        {{- if $value.volumes }}
+        volumeMounts:
+        {{- range $vol := $value.volumes }}
+        - name: {{ $vol.name }}
+          mountPath: {{ $vol.path }}
+        {{- end }}
+        {{- end }}
+      {{- if and $combineWebTask (eq $key "wiki-web") }}
+      - name: {{ $wikiTask.name }}
+        {{- $baseRepo := default "docker.bluespice.com/bluespice" $.Values.global.image.repository }}
+        {{- $wikiTag := default $.Chart.AppVersion $.Values.global.image.wikiTag }}
+        image: {{ printf "%s/wiki:%s" $baseRepo $wikiTag }}
+        imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}     
+        {{- with $.Values.global.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with $wikiTask.args }}
+        args:
+        {{- range . }}
+          - {{ . }}
+        {{- end }}
+        {{- end }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "bluespice.fullname" $ }}-wiki-config
+        env:
+        {{- if $wikiTask.extraEnv }}
+        {{- range $envKey, $envValue := $wikiTask.extraEnv }}
+          - name: {{ $envKey }}
+            value: "{{ $envValue }}"
+        {{- end }}
+        {{- end }}
+        {{- if $statefulDbEnabled }}
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: bluespice-database-secrets
+                key: MARIADB_PASSWORD
+        {{- else if or $.Values.wikiEnv.secretEnv.DB_PASS $.Values.wikiEnv.existingSecret.name }}
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (printf "%s-wiki-secrets" (include "bluespice.fullname" $)) $.Values.wikiEnv.existingSecret.name }}
+                key: {{ default "DB_PASS" $.Values.wikiEnv.existingSecret.dbKey }}
+        {{- end }}
+        {{- if and (not $statefulSearchEnabled) (or $.Values.wikiEnv.secretEnv.SEARCH_PASS $.Values.wikiEnv.existingSecret.name) }}
+          - name: SEARCH_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (printf "%s-wiki-secrets" (include "bluespice.fullname" $)) $.Values.wikiEnv.existingSecret.name }}
+                key: {{ default "SEARCH_PASS" $.Values.wikiEnv.existingSecret.searchKey }}
+        {{- end }}
+        {{- with $wikiTask.resources }}
+        resources:
+            {{- toYaml $wikiTask.resources | nindent 12 }}
+        {{- end }}
+        {{- with $wikiTask.livenessProbe }}
+        livenessProbe:
+            {{- toYaml $wikiTask.livenessProbe | nindent 12 }}
+        {{- end }}
+        {{- with $wikiTask.readinessProbe }}
+        readinessProbe:
+            {{- toYaml $wikiTask.readinessProbe | nindent 12 }}
+        {{- end }}
+        {{- if $wikiTask.volumes }}
+        volumeMounts:
+        {{- range $vol := $wikiTask.volumes }}
+        - name: {{ $vol.name }}
+          mountPath: {{ $vol.path }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- $volumes := dict }}
+      {{- range $vol := $value.volumes }}
+      {{- $_ := set $volumes $vol.name $vol }}
+      {{- end }}
+      {{- if and $combineWebTask (eq $key "wiki-web") }}
+        {{- range $vol := $wikiTask.volumes }}
+        {{- $_ := set $volumes $vol.name $vol }}
+        {{- end }}
+      {{- end }}
+      {{- if gt (len $volumes) 0 }}
+      volumes:
+      {{- range $name, $vol := $volumes }}
+      - name: {{ $vol.name }}
+        persistentVolumeClaim:
+          claimName: {{ default (printf "%s-pvc" $vol.name) $vol.claim }}
+      {{- end }}
+      {{- end }}
+      {{- if or $.Values.global.regcred $.Values.global.regcredName }}
+      imagePullSecrets:
+        - name: {{ $regcredName }}
+      {{- end }}
+      {{- with $value.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $value.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $value.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}
+{{- end }}

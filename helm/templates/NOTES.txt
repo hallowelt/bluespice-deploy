@@ -1,0 +1,2 @@
+Run the below command to get the password of user  'Admin'.
+kubectl exec <pod name> -n bluespice -- cat /data/initialAdminPassword
