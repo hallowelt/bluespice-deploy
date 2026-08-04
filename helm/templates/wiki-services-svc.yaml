@@ -1,0 +1,30 @@
+{{- range $key, $value := .Values.wikiServices }}
+{{- if $value.serviceEnabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $value.name }}
+  namespace: {{ default "default" $.Release.Namespace }}
+  labels:
+    app: {{ $value.name }}
+spec:
+  type: {{ $.Values.global.svc.type }}
+  selector:
+    app: {{ $value.name }}
+  ports:
+    {{- if $value.ports }}
+      {{- range $index, $port := $value.ports }}
+    - port: {{ $.Values.global.svc.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: TCP
+      name: http
+      {{- end }}
+    {{- else }}
+    - port: {{ $.Values.global.svc.port }}
+      targetPort: {{ $value.targetPort }}
+      protocol: TCP
+      name: http
+    {{- end }}
+---
+{{- end }}
+{{- end }}

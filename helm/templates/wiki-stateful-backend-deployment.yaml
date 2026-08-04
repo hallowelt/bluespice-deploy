@@ -1,0 +1,62 @@
+{{- range $key, $value := .Values.statefulBackendServices }}
+{{- if $value.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $value.name }}
+  namespace: {{ default "default" $.Release.Namespace }}
+  labels:
+    app: {{ $value.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $value.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $value.name }}
+    spec:
+      {{- $podSecurityContext := default $.Values.global.podSecurityContext $value.podSecurityContext }}
+      {{- with $podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ $value.name }}
+        image: {{ $value.image | quote }}
+        imagePullPolicy: {{ default "IfNotPresent" $.Values.global.imagePullPolicy }}
+        ports:
+        - containerPort: {{ $value.targetPort }}
+        {{- with $value.env }}
+        env:
+          {{- toYaml $value.env | nindent 10 }}
+        {{- end }}
+        {{- if eq $value.name "database" }}
+        envFrom:
+        - secretRef:
+            name: bluespice-database-secrets
+        {{- end }}
+        {{- if $value.volumes }}
+        volumeMounts:
+        {{- range $vol := $value.volumes }}
+        - name: {{ $vol.claim }}
+          mountPath: {{ $vol.path }}
+        {{- end }}
+        {{- end }}
+        {{- if $value.resources }}
+        resources:
+          {{- toYaml $value.resources | nindent 10 }}
+        {{- end }}
+      {{- if $value.volumes }}
+      volumes:
+      {{- range $vol := $value.volumes }}
+      - name: {{ $vol.claim }}
+        persistentVolumeClaim:
+          claimName: {{ $vol.claim }}
+      {{- end }}
+      {{- end }}
+
+---
+{{- end }}
+{{- end }}

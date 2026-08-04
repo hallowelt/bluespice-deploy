@@ -1,0 +1,20 @@
+{{- range $key, $value := .Values.statelessbackendServices }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $value.name }}
+  namespace: {{ default "default" $.Release.Namespace }}
+  labels:
+    app: {{ $value.name }}
+    {{- include "bluespice.labels" $ | nindent 4 }}
+spec:
+  type: {{ $.Values.global.svc.type }}
+  selector:
+    app: {{ $value.name }}
+  ports:
+    - port: {{ $value.port }}
+      targetPort: {{ $value.targetPort }}
+      protocol: TCP
+      name: http
+---
+{{- end }}
