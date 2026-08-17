@@ -1,0 +1,62 @@
+x-statistics-db-environment: &statistics-db-environment
+  STATISTICS_DB_HOST: statisticsdatabase
+  STATISTICS_DB_PORT: 3306
+  STATISTICS_DB_NAME: statistics
+  STATISTICS_DB_USER: statistics
+  STATISTICS_DB_PASS: ${DB_PASS}
+
+services:
+
+  statisticsdashboard:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/statisticsdashboard:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-statisticsdashboard
+    restart: unless-stopped
+    depends_on:
+      statisticsdatabase:
+        condition: service_healthy
+        restart: true
+    environment:
+      MYSQL_HOST: statisticsdatabase
+      MYSQL_PORT: 3306
+      MYSQL_USER: statistics
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_DB_NAME: statistics
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_statisticsdashboard/
+      VIRTUAL_PORT: 3000
+      VIRTUAL_DEST: /
+      GF_SERVER_ROOT_URL: https://${WIKI_HOST}${WIKI_BASE_PATH:-/}_statisticsdashboard/
+      GF_SERVER_PROTOCOL: http
+      GF_SERVER_DOMAIN: ${WIKI_HOST}
+    volumes:
+      - ${DATADIR}/statistics-dashboard/data:/var/lib/grafana
+
+  statisticsdatabase:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/statisticsdatabase:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-statisticsdatabase
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MYSQL_DATABASE: statistics
+      MYSQL_USER: statistics
+      MYSQL_PASSWORD: ${DB_PASS}
+    healthcheck:
+      test: mysqladmin ping
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ${DATADIR}/database-statistics/logs:/config/log/mysql
+      - ${DATADIR}/database-statistics/data:/config/databases
+
+  wiki-web:
+    environment:
+      <<: *statistics-db-environment
+
+  wiki-task:
+    environment:
+      <<: *statistics-db-environment
+    depends_on:
+      statisticsdatabase:
+        condition: service_healthy
