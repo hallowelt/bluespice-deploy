@@ -32,7 +32,7 @@ services:
       timeout: 5s
       retries: 10
 
-  metadatastore:
+  metadatastore: 
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-metadatastore
     restart: unless-stopped
     image: neo4j:5
