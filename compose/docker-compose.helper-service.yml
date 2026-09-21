@@ -50,7 +50,7 @@ services:
     restart: no
     command: ${UPGRADE_ACTION}
   backup:
-    image: helperplusbackup:latest
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
     depends_on:
       database:
         condition: service_healthy
