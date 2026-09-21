@@ -17,10 +17,16 @@ x-common-environment: &common-environment
   DB_PREFIX: ${DB_PREFIX}
 
   SMTP_HOST: ${SMTP_HOST}
+  BLUESPICE_BACKUP_TIME: ${BACKUP_TIME:-"0 2 * * *"}
+  BLUESPICE_BACKUP_PASS: ${BACKUP_PASS:-}
+  FILE_BACKUP: ${FILE_BACKUP:-true}
+  BACKUP_TYPE: ${BACKUP_TYPE:-tar-file}
+  BLUESPICE_BACKUP_RETENTION: ${BACKUP_RETENTION:-5}
 
 services:
   prepare:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    image: helperplusbackup:latest
+    image: docker.bluespice.com/bluespice/helper:5.2
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-prepare
     volumes:
       - ${DATADIR}:/data
@@ -30,7 +36,7 @@ services:
       <<: *common-environment
 
   upgrade:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    image: helperplusbackup:latest
     depends_on:
       database:
         condition: service_healthy
@@ -44,7 +50,7 @@ services:
     restart: no
     command: ${UPGRADE_ACTION}
   backup:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    image: helperplusbackup:latest
     depends_on:
       database:
         condition: service_healthy
@@ -56,8 +62,8 @@ services:
     environment:
       <<: *common-environment
 
-    restart: no
-    command: ${UPGRADE_ACTION}
+    restart: ${BACKUP_RESTART}
+    command: ${BACKUP_ACTION}
 
   search:
     depends_on:
