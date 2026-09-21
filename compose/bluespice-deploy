@@ -19,6 +19,8 @@ for i in "$@"; do
 done
 
 export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
+export BACKUP_ACTION="sleep 1"
+export BACKUP_RESTART="never"
 
 export TZ=$(readlink /etc/localtime 2>/dev/null | sed 's|.*/zoneinfo/||')
 
@@ -63,6 +65,10 @@ else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
 
+if [ "${CREATE_BACKUP}" == "true" ]; then
+	export BACKUP_ACTION="run-backups"
+	export BACKUP_RESTART="always"
+fi
 if [ -f docker-compose.override.yml ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
 fi
