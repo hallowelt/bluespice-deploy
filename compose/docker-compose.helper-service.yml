@@ -25,7 +25,8 @@ x-common-environment: &common-environment
 
 services:
   prepare:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    #image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    image: helperplusbackup:latest
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-prepare
     volumes:
       - ${DATADIR}:/data
@@ -49,7 +50,7 @@ services:
     restart: no
     command: ${UPGRADE_ACTION}
   backup:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    image: helperplusbackup:latest
     depends_on:
       database:
         condition: service_healthy
@@ -60,6 +61,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       <<: *common-environment
+    init: true
 
     restart: ${BACKUP_RESTART}
     command: ${BACKUP_ACTION}

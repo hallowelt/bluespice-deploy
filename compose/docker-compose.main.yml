@@ -69,6 +69,7 @@ services:
     image: ${BLUESPICE_WIKI_IMAGE}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-task
     restart: unless-stopped
+    init: true
     command: ["start-task --runAll"]
     environment:
       <<: *common-environment
