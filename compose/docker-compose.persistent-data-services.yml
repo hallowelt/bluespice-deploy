@@ -25,6 +25,7 @@ services:
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
+      - CLI_OPTS=--innodb-buffer-pool-size=1G
     healthcheck:
       test: mysqladmin ping
       start_period: 5s
