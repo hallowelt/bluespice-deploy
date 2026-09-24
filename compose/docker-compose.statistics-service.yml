@@ -12,5 +12,8 @@ services:
       GF_SERVER_ROOT_URL: https://${WIKI_HOST}${WIKI_BASE_PATH:-/}_statisticsdashboard/
       GF_SERVER_PROTOCOL: http
       GF_SERVER_DOMAIN: ${WIKI_HOST}
+      WIKI_API_URL: http://wiki-web:9090${WIKI_BASE_PATH:-/}w/rest.php
+    secrets:
+      - STATISTICS_API_KEY
     volumes:
       - ${DATADIR}/statistics-dashboard/data:/var/lib/grafana
