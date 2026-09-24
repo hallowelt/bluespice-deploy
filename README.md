@@ -30,6 +30,3 @@ Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Insta
 For more variables to set in `compose/.env`, please also check [documentation](https://github.com/hallowelt/docker-bluespice-wiki/blob/main/README.md) of the image behind the wiki-containers.
 
 If the environment variable `DEV_WIKI_DEBUG` is set, one can set the `debug-entrypoint` GPC (=`$_REQUEST`) to a value matching the `MW_ENTRY_POINT` constant in context of the application to enable full debug log to `stdout` for any call to the specified entry point.
-
-## Development
-Please check the [`dev` branch](https://github.com/hallowelt/bluespice-deploy/tree/dev) of this repo
