@@ -32,7 +32,7 @@ services:
       timeout: 5s
       retries: 10
 
-  metadatastore: 
+  metadatastore:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-metadatastore
     restart: unless-stopped
     image: neo4j:5
@@ -40,6 +40,16 @@ services:
       NEO4J_AUTH: neo4j/${METADATASTORE_PASS}
     volumes:
       - ${DATADIR}/metadatastore:/data
+
+  jobqueue:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/keyvaluestore:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-jobqueue
+    healthcheck:
+      test: redis-cli ping || exit 1
+    volumes:
+      - ${DATADIR}/keyvaluestore:/data
+    restart: unless-stopped
+    command: valkey-server /etc/valkey/valkey.conf
 
   wiki-installer:
     depends_on:
