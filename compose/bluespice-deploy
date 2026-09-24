@@ -19,7 +19,8 @@ for i in "$@"; do
 done
 
 export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
-
+export BACKUP_ACTION="sleep 1"
+export BACKUP_RESTART="no"
 export TZ=$(readlink /etc/localtime 2>/dev/null | sed 's|.*/zoneinfo/||')
 
 source .env
@@ -56,7 +57,10 @@ if [ "${KERBEROS}" == "true" ]; then
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
-
+if [ "${RUN_BACKUP}" == "true" ]; then
+	export BACKUP_ACTION="run-backups"
+	export BACKUP_RESTART="always"
+fi
 if [ -f docker-compose.override.yml ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
 fi

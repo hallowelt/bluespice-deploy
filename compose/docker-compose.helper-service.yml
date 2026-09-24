@@ -43,6 +43,23 @@ services:
 
     restart: no
     command: ${UPGRADE_ACTION}
+ 
+  backup:
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/helper:${VERSION}
+    depends_on:
+      database:
+        condition: service_healthy
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-backup
+    volumes:
+      - ${DATADIR}:/data
+      - ${BACKUPDIR}:/backup
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      <<: *common-environment
+    init: true
+
+    restart: ${BACKUP_RESTART}
+    command: ${BACKUP_ACTION}
 
   search:
     depends_on:
