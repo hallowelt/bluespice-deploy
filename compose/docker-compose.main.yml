@@ -30,6 +30,8 @@ x-common-environment: &common-environment
 
   CHAT_HOST: ${CHAT_HOST:--}
 
+  METADATASTORE_PASS: ${METADATASTORE_PASS}
+
 x-common-secrets: &common-secrets
   - INTERNAL_SIMPLESAMLPHP_ADMIN_PASS
   - INTERNAL_SIMPLESAMLPHP_SECRET_SALT

@@ -10,7 +10,7 @@ For an existing BlueSpice 4.5.x installation using [an earlier stack](https://gi
 In that case, `./bluespice-deploy up -d --profile=upgrade` should be used.
 Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information.
 
-<!--TODO: Upgrade for 4.4.x "all-in-one" container users-->
+<!--TODO: Upgrade for 4.4.x "all-in-one" container users--> 
 
 ## Configuration
 | Variable Name                | Default Value  | Description                                          | Optional |
