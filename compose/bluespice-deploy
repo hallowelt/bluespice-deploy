@@ -57,6 +57,11 @@ if [ "${KERBEROS}" == "true" ]; then
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
+if [ ${BACKUP_HOUR} ] && [ -z ${RUN_BACKUP} ] ; then
+	export BACKUP_ACTION="run-backups"
+	export BACKUP_RESTART="always"
+	export BACKUPDIR=$(echo "${DATADIR}/backup")
+fi
 if [ "${RUN_BACKUP}" == "true" ]; then
 	export BACKUP_ACTION="run-backups"
 	export BACKUP_RESTART="always"
