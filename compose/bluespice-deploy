@@ -77,7 +77,7 @@ if [ -n "${BLUESPICE_WIKI_IMAGE}" ]; then
 	WIKI_IMAGE=${BLUESPICE_WIKI_IMAGE}
 fi
 
-if [ ! -d ${DATADIR}/.secrets ]; then
+if [ ! -d "${DATADIR}/.secrets" ] || [ ! -f "${DATADIR}/.secrets/INTERNAL_SIMPLESAMLPHP_SESSION_API_TOKEN" ]; then
 	echo "Preparing Secrets for 5.2.x"
 	BLUESPICE_WIKI_IMAGE=${WIKI_IMAGE}	\
 	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
