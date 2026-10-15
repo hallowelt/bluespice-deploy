@@ -96,6 +96,7 @@ if [ ! -d ${DATADIR}/.secrets ]; then
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
+		-f docker-compose.statistics-service.yml \
 		${EXTENDED_TOOLS} \
 		up prepare
 	echo "Preparation finished"
@@ -109,5 +110,6 @@ fi
 		-f docker-compose.main.yml \
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
+		-f docker-compose.statistics-service.yml \
 		${EXTENDED_TOOLS} \
 		${DOCKER_ARGS[*]}
