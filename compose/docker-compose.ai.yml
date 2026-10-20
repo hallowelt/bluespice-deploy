@@ -93,6 +93,13 @@ services:
       MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/oauth2/access_token
       MCP_OAUTH_SCOPES: openid profile mcp
       MCP_OAUTH_PROXY_TOKEN_ENDPOINT: true
+      # OAuth consumer the chatbot uses to act on behalf of users (create it on the wiki, see bluespice/mcp README).
+      # Without it, chatbot tool calls fail, unless MCP_ALLOW_MACHINE_ACCOUNT_TOOLS=true (service account, full access).
+      MCP_OAUTH_CLIENT_ID: ${MCP_OAUTH_CLIENT_ID:-}
+      MCP_OAUTH_CLIENT_SECRET: ${MCP_OAUTH_CLIENT_SECRET:-}
+      MCP_OAUTH_PUBLIC_WIKI_BASE: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}
+      MCP_OAUTH_REDIRECT_URI: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}/_mcp/oauth/callback
+      MCP_ALLOW_MACHINE_ACCOUNT_TOOLS: ${MCP_ALLOW_MACHINE_ACCOUNT_TOOLS:-false}
     restart: unless-stopped
     secrets:
       - MCP_TOKEN_SALT
