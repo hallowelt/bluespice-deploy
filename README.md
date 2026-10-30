@@ -3,12 +3,12 @@
 Toolkit for containerized deployment of BlueSpice Wiki.
 
 ## Deployment
-Please follow the [installation guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Docker) in the BlueSpice Helpdesk 📚. For questions and support, please use the contact [form 🌐](https://bluespice.com/contact/) or visit the [community forums 💡](https://community.bluespice.com/).
+Please follow the [installation guide](https://en.wiki.bluespice.com/wiki/Setup:Installation_Guide/Docker) in the BlueSpice Helpdesk 📚. For questions and support, please use the contact [form 🌐](https://bluespice.com/contact/) or visit the [community forums 💡](https://community.bluespice.com/).
 
 ## Upgrade to BlueSpice 5
 For an existing BlueSpice 4.5.x installation using [an earlier stack](https://github.com/hallowelt/bluespice-deploy/tree/4.5.x) of `bluespice-deploy` docker containers, an automated upgrade is possible.
 In that case, `./bluespice-deploy up -d --profile=upgrade` should be used.
-Please check the [upgrade guide](https://en.wiki5.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information.
+Please check the [upgrade guide](https://en.wiki.bluespice.com/wiki/Setup:Installation_Guide/Update_from_4.5_to_5.1) for more information.
 
 <!--TODO: Upgrade for 4.4.x "all-in-one" container users-->
 
