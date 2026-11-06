@@ -29,6 +29,10 @@ services:
       AI__OLLAMA__MODEL: ${OLLAMA_LLM_MODEL:-llama3.3}
       AI__ENVIRONMENT: ${AI__ENVIRONMENT:-production}
       AI__MCP__URL: http://mcp:4000/mcp
+      # OAuth consumer the chatbot uses to act on behalf of users (create it on the wiki, see bluespice/ai README).
+      AI__OAUTH__CLIENT_ID: ${CHATBOT_OAUTH_CLIENT_ID:-}
+      AI__OAUTH__CLIENT_SECRET: ${CHATBOT_OAUTH_CLIENT_SECRET:-}
+      AI__OAUTH__REDIRECT_URI: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}${WIKI_BASE_PATH:-/}_chat/oauth/callback
       TZ: ${TZ:-UTC}
     secrets:
       - AI__SECURITY__STATIC_API_TOKEN
@@ -88,9 +92,12 @@ services:
       VIRTUAL_PORT: 4000
       VIRTUAL_DEST: /
       MCP_WIKI_BASE_PATH: http://wiki-web:9090
-      MCP_OAUTH_ISSUER: http://wiki-web:9090/w/oauth2
-      MCP_OAUTH_AUTHORIZATION_ENDPOINT: http://wiki-web:9090/w/oauth2/authorize
-      MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/oauth2/access_token
+      # Issuer and authorization endpoint are opened in the user's browser; token and userinfo are proxied by mcp
+      MCP_OAUTH_ISSUER: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}${WIKI_BASE_PATH:-/}w/rest.php/oauth2
+      MCP_OAUTH_AUTHORIZATION_ENDPOINT: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}${WIKI_BASE_PATH:-/}w/rest.php/oauth2/authorize
+      MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/access_token
+      MCP_OAUTH_USERINFO_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/resource/profile
+      MCP_PUBLIC_URL: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}/_mcp
       MCP_OAUTH_SCOPES: openid profile mcp
       MCP_OAUTH_PROXY_TOKEN_ENDPOINT: true
     restart: unless-stopped
