@@ -97,7 +97,6 @@ services:
       MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/access_token
       MCP_OAUTH_USERINFO_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/resource/profile
       MCP_PUBLIC_URL: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}/_mcp
-      MCP_OAUTH_PROXY_TOKEN_ENDPOINT: true
     restart: unless-stopped
     secrets:
       - MCP_TOKEN_SALT
