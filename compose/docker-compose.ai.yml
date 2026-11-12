@@ -28,7 +28,7 @@ services:
       AI__OLLAMA__EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-mxbai-embed-large:335m}
       AI__OLLAMA__MODEL: ${OLLAMA_LLM_MODEL:-llama3.3}
       AI__ENVIRONMENT: ${AI__ENVIRONMENT:-production}
-      AI__MCP__URL: http://mcp:4000/mcp
+      AI__MCP__URL: http://mcp:4000
       # OAuth consumer the chatbot uses to act on behalf of users (create it on the wiki, see bluespice/ai README).
       AI__OAUTH__CLIENT_ID: ${CHATBOT_OAUTH_CLIENT_ID:-}
       AI__OAUTH__CLIENT_SECRET: ${CHATBOT_OAUTH_CLIENT_SECRET:-}
