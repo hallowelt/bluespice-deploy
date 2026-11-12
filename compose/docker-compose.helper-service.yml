@@ -37,7 +37,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-upgrade
     volumes:
       - ${DATADIR}:/data
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       <<: *common-environment
 
