@@ -3,7 +3,7 @@ services:
   search:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/search:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-search
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - ${DATADIR}/search/data:/usr/share/opensearch/data
     healthcheck:
@@ -16,7 +16,7 @@ services:
   database:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-database
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - ${DATADIR}/database/logs:/config/log/mysql
       - ${DATADIR}/database/data:/config/databases
@@ -39,7 +39,7 @@ services:
       test: redis-cli ping || exit 1
     volumes:
       - ${DATADIR}/keyvaluestore:/data
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     command: valkey-server /etc/valkey/valkey.conf
 
   wiki-installer:

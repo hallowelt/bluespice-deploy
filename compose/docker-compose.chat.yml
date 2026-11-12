@@ -32,16 +32,16 @@ services:
       - CHAT_BRIDGE_TOKEN
       - CHAT_WIKI_CHAT_TOKEN_SALT
       - CHAT_WIKI_ACCESS_TOKEN
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
   wiki-web:
     environment:
       CHAT_HOST: chat
     secrets:
       - INTERNAL_CHAT_TOKEN
-      - INTERNAL_CHAT_WIKI_ACCESS_TOKEN
+      - INTERNAL_CHAT_WIKI_API_KEY
   wiki-task:
     environment:
       CHAT_HOST: chat
     secrets:
       - INTERNAL_CHAT_TOKEN
-      - INTERNAL_CHAT_WIKI_ACCESS_TOKEN
+      - INTERNAL_CHAT_WIKI_API_KEY

@@ -3,7 +3,7 @@ services:
   statisticsdashboard:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/statisticsdashboard:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-statisticsdashboard
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     environment:
       VIRTUAL_HOST: ${WIKI_HOST}
       VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_statisticsdashboard/

@@ -2,21 +2,21 @@ services:
   cache:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/cache:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-cache
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
   pdf:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
 
   formula:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-formula
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
 
   diagram:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-diagram
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
 
   wire:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wire
@@ -27,4 +27,4 @@ services:
     secrets:
       - WIRE_API_KEY
       - WIRE_TOKEN_SALT
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}

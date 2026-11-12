@@ -3,7 +3,7 @@ services:
   proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/proxy:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-proxy
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     ports:
       - "443:443"
       - "80:80"
@@ -18,7 +18,7 @@ services:
   kerberos-proxy:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/kerberosproxy:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-kerberosproxy
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - ${DATADIR}/kerberos/krb5.conf:/etc/krb5.conf
       - ${DATADIR}/kerberos/kerberos.keytab:/etc/kerberos.keytab

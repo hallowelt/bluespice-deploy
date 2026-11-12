@@ -19,7 +19,8 @@ for i in "$@"; do
 done
 
 export UPGRADE_ACTION=${UPGRADE_ACTION:-"sleep 1"}
-
+export BACKUP_ACTION="sleep 1"
+export BACKUP_RESTART="no"
 export TZ=$(readlink /etc/localtime 2>/dev/null | sed 's|.*/zoneinfo/||')
 
 source .env
@@ -39,7 +40,7 @@ if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
 		echo -e "\n-------------\n"
 		echo "Please contact support@hallowelt.com for your Credentials against docker.bluespice.com"
 		echo -e "\n-------------\n"
-		exit
+		exit 1
 		fi
 	fi
 else
@@ -62,23 +63,26 @@ if [ "${KERBEROS}" == "true" ]; then
 else
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.proxy.yml"
 fi
-
+if [ ${BACKUP_HOUR} ] && [ -z ${RUN_BACKUP} ] ; then
+	export BACKUP_ACTION="run-backups"
+	export BACKUP_RESTART="always"
+	export BACKUPDIR=$(echo "${DATADIR}/backup")
+fi
+if [ "${RUN_BACKUP}" == "true" ]; then
+	export BACKUP_ACTION="run-backups"
+	export BACKUP_RESTART="always"
+fi
 if [ -f docker-compose.override.yml ]; then
        EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.override.yml"
 fi
 ##allow custom services repo for testing
-if [ -z "${BLUESPICE_SERVICE_REPOSITORY}" ] && [ -n "${SERVICES_REPOSITORY_PATH}" ]; then
-	BLUESPICE_SERVICE_REPOSITORY=${SERVICES_REPOSITORY_PATH}
-else
-	BLUESPICE_SERVICE_REPOSITORY='bluespice'
-fi
+BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY:-${SERVICES_REPOSITORY_PATH:-bluespice}}
 ##allow custom wiki image for testing
 if [ -n "${BLUESPICE_WIKI_IMAGE}" ]; then
 	WIKI_IMAGE=${BLUESPICE_WIKI_IMAGE}
 fi
 
-if [ ! -d ${DATADIR}/.secrets ]; then
-	echo "Preparing Secrets for 5.2.x"
+bluespice_compose() {
 	BLUESPICE_WIKI_IMAGE=${WIKI_IMAGE}	\
 	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
 		docker compose \
@@ -88,19 +92,27 @@ if [ ! -d ${DATADIR}/.secrets ]; then
 		-f docker-compose.persistent-data-services.yml \
 		-f docker-compose.stateless-services.yml \
 		-f docker-compose.statistics-service.yml \
+		-f docker-compose.mcp-service.yml \
 		${EXTENDED_TOOLS} \
-		up prepare
+		"$@"
+}
+
+if [ ! -d ${DATADIR}/.secrets ]; then
+	echo "Preparing Secrets"
+	bluespice_compose up prepare
 	echo "Preparation finished"
 fi
 
-	BLUESPICE_WIKI_IMAGE=${WIKI_IMAGE}	\
-	BLUESPICE_SERVICE_REPOSITORY=${BLUESPICE_SERVICE_REPOSITORY} \
-		docker compose \
-		-f docker-compose.helper-service.yml \
-		-f docker-compose.secrets.yml \
-		-f docker-compose.main.yml \
-		-f docker-compose.persistent-data-services.yml \
-		-f docker-compose.stateless-services.yml \
-		-f docker-compose.statistics-service.yml \
-		${EXTENDED_TOOLS} \
-		${DOCKER_ARGS[*]}
+# The upgrade runs on its own before the stack is created, as it may provide files (e.g. renamed secrets)
+# the containers of the stack require
+if [ "${UPGRADE_ACTION}" != "sleep 1" ]; then
+	echo "Running upgrade"
+	if ! bluespice_compose run --rm upgrade; then
+		echo "Upgrade failed, see ${DATADIR}/wiki/bluespice/logs/backend_upgrade_6.log"
+		exit 1
+	fi
+	echo "Upgrade finished"
+	export UPGRADE_ACTION="sleep 1"
+fi
+
+bluespice_compose "${DOCKER_ARGS[@]}"

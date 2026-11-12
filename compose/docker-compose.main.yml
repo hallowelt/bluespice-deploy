@@ -55,7 +55,7 @@ services:
   wiki-web:
     image: ${BLUESPICE_WIKI_IMAGE}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-web
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     environment:
       <<: *common-environment
     command: start-web
@@ -69,11 +69,13 @@ services:
   wiki-task:
     image: ${BLUESPICE_WIKI_IMAGE}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-wiki-task
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
+    init: true
     command: ["start-task --runAll"]
     environment:
       <<: *common-environment
       BACKUP_HOUR: ${BACKUP_HOUR}
+      PARALLEL_RUNJOBS_SERVICE_LOGLEVEL: ${PARALLEL_RUNJOBS_SERVICE_LOGLEVEL:-}
     volumes:
       - ${DATADIR}/wiki:/data
     secrets: *common-secrets
