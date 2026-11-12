@@ -1,0 +1,27 @@
+# MCP server of the wiki (Extension:WikiMCPTools), served at `<wiki>/_mcp/`. It has no
+# static access to the wiki: the tools run with the OAuth2 tokens of the users. The MCP server has no OAuth2
+# client of its own. Each MCP client (e.g. Claude Desktop) is registered on the wiki as an OAuth2 consumer
+# after the installation, see README.md, "MCP server".
+services:
+
+  mcp:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-mcp
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/mcp:${VERSION}
+    depends_on:
+      wiki-web:
+        condition: service_healthy
+    environment:
+      VIRTUAL_HOST: ${WIKI_HOST}
+      VIRTUAL_PATH: ${WIKI_BASE_PATH:-/}_mcp/
+      VIRTUAL_PORT: 4000
+      VIRTUAL_DEST: /
+      MCP_WIKI_BASE_PATH: http://wiki-web:9090
+      # The authorization endpoint is opened in the user's browser; token and userinfo are proxied by MCP.
+      # All under /w/rest.php/oauth2, as /w/oauth2 answers 403.
+      MCP_OAUTH_AUTHORIZATION_ENDPOINT: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}${WIKI_BASE_PATH:-/}w/rest.php/oauth2/authorize
+      MCP_OAUTH_TOKEN_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/access_token
+      MCP_OAUTH_USERINFO_ENDPOINT: http://wiki-web:9090/w/rest.php/oauth2/resource/profile
+      # So that the discovery URLs include /_mcp
+      MCP_PUBLIC_URL: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}${WIKI_BASE_PATH:-/}_mcp
+      MCP_OAUTH_PUBLIC_WIKI_BASE: ${WIKI_PROTOCOL:-https}://${WIKI_HOST}
+    restart: ${RESTART_POLICY:-unless-stopped}

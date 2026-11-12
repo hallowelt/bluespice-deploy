@@ -3,7 +3,7 @@ services:
   collabpads:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/collabpads:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-collabpads
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     depends_on:
       collabpads-database:
         condition: service_healthy
@@ -21,7 +21,7 @@ services:
   collabpads-database:
     image: mongo:8.2
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-collabpads-database
-    restart: unless-stopped
+    restart: ${RESTART_POLICY:-unless-stopped}
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       start_period: 5s

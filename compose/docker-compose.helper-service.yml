@@ -52,14 +52,14 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-backup
     volumes:
       - ${DATADIR}:/data
-      - ${BACKUPDIR}:/backup
+      - ${BACKUPDIR:-${DATADIR}/backup}:/backup
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       <<: *common-environment
     init: true
 
-    restart: ${BACKUP_RESTART}
-    command: ${BACKUP_ACTION}
+    restart: ${BACKUP_RESTART:-no}
+    command: ${BACKUP_ACTION:-sleep 1}
 
   search:
     depends_on:
