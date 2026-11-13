@@ -27,7 +27,7 @@ source .env
 
 EXTENDED_TOOLS=""
 
-if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" ]]; then
+if [[ "${EDITION}" == "pro" || "${EDITION}" == "farm" || "${EDITION}" == "galaxy" ]]; then
 	EXTENDED_TOOLS="${EXTENDED_TOOLS} -f docker-compose.collabpads-service.yml"
 	WIKI_IMAGE=docker.bluespice.com/bluespice-${EDITION}/wiki:${VERSION}
 
