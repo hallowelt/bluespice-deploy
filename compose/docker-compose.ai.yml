@@ -45,6 +45,8 @@ services:
       NEO4J_AUTH: neo4j/${AI_DB_PASS}
       NEO4J_PLUGINS: '["apoc"]'
       NEO4J_dbms_usage__report_enabled: "false"
+      # Mitigation for CVE-2026-114938 (BSSA-2026-10)
+      NEO4J_server_jvm_additional: "-XX:-UseBASE64Intrinsics"
     volumes:
       - ${DATADIR}/ai-data:/data
 

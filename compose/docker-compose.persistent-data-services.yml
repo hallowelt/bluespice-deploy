@@ -6,6 +6,9 @@ services:
     restart: unless-stopped
     volumes:
       - ${DATADIR}/search/data:/usr/share/opensearch/data
+    environment:
+      # Mitigation for CVE-2026-114938 (BSSA-2026-10). OpenSearch ignores JAVA_TOOL_OPTIONS.
+      OPENSEARCH_JAVA_OPTS: "-XX:-UseBASE64Intrinsics"
     healthcheck:
       test: curl -f http://localhost:9200
       start_period: 5s
