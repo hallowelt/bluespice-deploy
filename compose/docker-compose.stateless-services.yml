@@ -7,6 +7,9 @@ services:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/pdf:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
     restart: unless-stopped
+    environment:
+      # Mitigation for CVE-2026-114938 (BSSA-2026-10)
+      JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"
 
   formula:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
@@ -17,3 +20,6 @@ services:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-diagram
     restart: unless-stopped
+    environment:
+      # Mitigation for CVE-2026-114938 (BSSA-2026-10)
+      JAVA_TOOL_OPTIONS: "-XX:-UseBASE64Intrinsics"
