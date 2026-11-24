@@ -13,20 +13,30 @@ services:
       timeout: 5s
       retries: 10
 
+  # `DB_TYPE` (`mysql` or `postgres`) selects the image variant, e.g. `database:<version>-postgres`.
+  # The MySQL variant uses `/config/...`, the PostgreSQL variant `PGDATA` (`${DATADIR}/database/postgres`,
+  # its owner is managed by the image, not by `prepare`). The wiki user and its database are created
+  # by the wiki container (`init-database`) with the root credentials.
   database:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}
+    image: ${BLUESPICE_SERVICE_REPOSITORY}/database:${VERSION}-${DB_TYPE:-mysql}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-database
     restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - ${DATADIR}/database/logs:/config/log/mysql
       - ${DATADIR}/database/data:/config/databases
+      - ${DATADIR}/database/postgres:/var/lib/postgresql/data
     environment:
+      - DB_TYPE=${DB_TYPE:-mysql}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
+      - POSTGRES_USER=${DB_ROOT_USER}
+      - POSTGRES_PASSWORD=${DB_ROOT_PASS}
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data
     healthcheck:
-      test: mysqladmin ping
+      test: ["CMD-SHELL", "if [ \"$${DB_TYPE}\" = postgres ]; then pg_isready -U \"$${POSTGRES_USER}\" -d postgres; else mysqladmin ping; fi"]
       start_period: 5s
       interval: 5s
       timeout: 5s

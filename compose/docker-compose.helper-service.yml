@@ -15,6 +15,7 @@ x-common-environment: &common-environment
   DB_HOST: ${DB_HOST}
   DB_NAME: ${DB_NAME}
   DB_PREFIX: ${DB_PREFIX}
+  DB_TYPE: ${DB_TYPE:-mysql}
 
   SMTP_HOST: ${SMTP_HOST}
 
