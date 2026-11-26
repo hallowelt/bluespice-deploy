@@ -8,11 +8,6 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-pdf
     restart: ${RESTART_POLICY:-unless-stopped}
 
-  formula:
-    image: ${BLUESPICE_SERVICE_REPOSITORY}/formula:${VERSION}
-    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-formula
-    restart: ${RESTART_POLICY:-unless-stopped}
-
   diagram:
     image: ${BLUESPICE_SERVICE_REPOSITORY}/diagram:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-diagram
