@@ -39,3 +39,8 @@ services:
       WIKI_API_URL: http://wiki-web:9090${WIKI_BASE_PATH:-/}w/rest.php
     secrets:
       - STATISTICS_API_KEY
+
+  officefileconverter:
+    container_name: ${COMPOSE_PROJECT_NAME:-bluespice}-officefileconverter
+    image: gotenberg/gotenberg:9
+    restart: ${RESTART_POLICY:-unless-stopped}
